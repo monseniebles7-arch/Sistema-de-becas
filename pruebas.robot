@@ -1,5 +1,7 @@
 *** Settings ***
 Library    RequestsLibrary
+Library    Process
+Suite Setup    Start Flask Server
 
 *** Variables ***
 ${URL}    http://127.0.0.1:5000
@@ -16,3 +18,8 @@ La Pagina Muestra Conexion Exitosa
     Create Session    app    ${URL}
     ${respuesta}=    GET On Session    app    /
     Should Contain    ${respuesta.text}    Conexión exitosa
+
+*** Keywords ***
+Start Flask Server
+    Start Process    python    app.py    alias=flaskserver
+    Sleep    3s
