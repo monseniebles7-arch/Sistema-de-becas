@@ -1,0 +1,59 @@
+name: Pruebas Automatizadas
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: sistema_becas
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+          - name: Iniciar servidor Flask
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: root
+          DB_NAME: sistema_becas
+        run: |
+          python app.py &
+          sleep 3
+
+      - name: Ejecutar pruebas Robot Framework
+        run: robot pruebas.robot
+
+      - name: Subir reporte de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-robot
+          path: |
+            report.html
+            log.html
