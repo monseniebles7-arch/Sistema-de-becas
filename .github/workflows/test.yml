@@ -36,6 +36,22 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Crear estructura de la base de datos
+        run: mysql -h 127.0.0.1 -u root -proot sistemabecas < schema.sql
+
+      - name: Iniciar servidor Flask
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: root
+          DB_NAME: sistemabecas
+        run: |
+          python app.py &
+          sleep 3
+          
       - name: Iniciar servidor Flask
         env:
           DB_HOST: 127.0.0.1
