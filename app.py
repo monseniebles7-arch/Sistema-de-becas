@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from conexion import obtener_conexion
 
 app = Flask(__name__)
@@ -12,16 +12,9 @@ def inicio():
         total = cursor.fetchone()[0]
         cursor.close()
         conexion.close()
-        return f"""
-            <h1>Sistema de Becas IFARHU</h1>
-            <p style="color: green;">Conexión exitosa a la base de datos.</p>
-            <p>Estudiantes registrados: {total}</p>
-        """
+        return render_template("index.html", mensaje="Conexión exitosa a la base de datos.", total=total)
     except Exception as error:
-        return f"""
-            <h1>Sistema de Becas IFARHU</h1>
-            <p style="color: red;">Error de conexión: {error}</p>
-        """
+        return render_template("index.html", mensaje=f"Error de conexión: {error}", total=0)
 
 if __name__ == "__main__":
     app.run(debug=True)
