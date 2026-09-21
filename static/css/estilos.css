@@ -1,0 +1,194 @@
+/* ===== Reset y base ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #2E3B4E;
+    background-color: #F4F5F7;
+}
+
+a {
+    color: #0B3D66;
+    text-decoration: none;
+}
+
+h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+/* ===== Navegación (para páginas internas, después del login) ===== */
+nav {
+    background-color: #0B3D66;
+    color: #FFFFFF;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+nav h1 {
+    font-size: 1.2rem;
+    margin-right: auto;
+}
+
+nav a {
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+nav a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ===== Página de login ===== */
+.contenedor-login {
+    display: flex;
+    min-height: 100vh;
+}
+
+.panel-institucional {
+    background-color: #0B3D66;
+    color: #FFFFFF;
+    flex: 1;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.panel-institucional .entidad {
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+    max-width: 320px;
+}
+
+.panel-institucional h1 {
+    font-size: 2.4rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    max-width: 420px;
+}
+
+.panel-institucional .descripcion {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 380px;
+    opacity: 0.9;
+}
+
+.panel-formulario {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+    padding: 2rem;
+}
+
+.formulario-caja {
+    width: 100%;
+    max-width: 360px;
+}
+
+.formulario-caja h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.4rem;
+}
+
+.formulario-caja .subtitulo {
+    font-size: 0.9rem;
+    color: #5A6472;
+    margin-bottom: 2rem;
+}
+
+.formulario-caja label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    margin-top: 1.2rem;
+}
+
+.formulario-caja input {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #C7CDD6;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.formulario-caja input:focus {
+    outline: 2px solid #0B3D66;
+    outline-offset: 1px;
+    border-color: #0B3D66;
+}
+
+.formulario-caja button {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 0.8rem;
+    background-color: #C1272D;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.formulario-caja button:hover {
+    background-color: #A31F24;
+}
+
+.mensaje-error {
+    background-color: #FDEAEA;
+    color: #C1272D;
+    padding: 0.7rem 0.9rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== Tablas (para listados de estudiantes, universidades, etc.) ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    margin-top: 1.5rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #E2E5EA;
+    font-size: 0.9rem;
+}
+
+th {
+    background-color: #EDF1F5;
+    font-weight: 600;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 800px) {
+    .contenedor-login {
+        flex-direction: column;
+    }
+    .panel-institucional {
+        padding: 2.5rem 1.5rem;
+    }
+}
