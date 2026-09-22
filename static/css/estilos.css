@@ -24,26 +24,77 @@ h1, h2, h3 {
 nav {
     background-color: #0B3D66;
     color: #FFFFFF;
-    padding: 1rem 2rem;
+    padding: 0.9rem 2rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 2rem;
+    border-bottom: 3px solid #C1272D;
+    flex-wrap: wrap;
 }
 
-nav h1 {
-    font-size: 1.2rem;
-    margin-right: auto;
+.nav-marca {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-logo {
+    height: 30px;
+    width: auto;
+}
+
+.nav-titulo {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.05rem;
+}
+
+.nav-enlaces {
+    display: flex;
+    gap: 1.75rem;
 }
 
 nav a {
     color: #FFFFFF;
     font-size: 0.9rem;
-    opacity: 0.9;
+    opacity: 0.85;
 }
 
 nav a:hover {
     opacity: 1;
     text-decoration: underline;
+}
+
+.nav-enlaces a.nav-activo {
+    opacity: 1;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #FFFFFF;
+    padding-bottom: 3px;
+}
+
+.nav-usuario {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+}
+
+.nav-nombre {
+    opacity: 0.85;
+}
+
+.nav-salir {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 0.35rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    opacity: 1;
+}
+
+.nav-salir:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
 }
 
 main {
@@ -208,6 +259,74 @@ main {
 
 
 
+/* ===== Página de inicio ===== */
+.inicio-hero {
+    background-color: #0B3D66;
+    color: #FFFFFF;
+    padding: 2.5rem 3rem;
+    border-radius: 4px;
+    margin-bottom: 2.5rem;
+}
+
+.inicio-hero h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.6rem;
+}
+
+.inicio-resumen {
+    color: #B7C5D6;
+    font-size: 0.95rem;
+}
+
+.inicio-resumen strong {
+    color: #FFFFFF;
+}
+
+.inicio-acciones h3 {
+    font-size: 0.95rem;
+    color: #5A6472;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.tarjetas-acciones {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tarjeta-accion {
+    flex: 1;
+    min-width: 240px;
+    display: block;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E5EA;
+    border-left: 4px solid #0B3D66;
+    border-radius: 4px;
+    padding: 1.5rem;
+}
+
+.tarjeta-accion:hover {
+    background-color: #FAFBFC;
+    text-decoration: none;
+}
+
+.tarjeta-accion h4 {
+    color: #0B3D66;
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+}
+
+.tarjeta-accion p {
+    color: #5A6472;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.tarjeta-primaria {
+    border-left-color: #C1272D;
+}
+
 /* ===== Pie de página institucional ===== */
 .pie-ifarhu {
     background-color: #0B3D66;
@@ -305,5 +424,11 @@ th {
     }
     .pie-enlaces {
         text-align: left;
+    }
+    .inicio-hero {
+        padding: 1.75rem;
+    }
+    .tarjeta-accion {
+        min-width: 100%;
     }
 }

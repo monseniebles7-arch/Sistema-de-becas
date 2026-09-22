@@ -7,10 +7,19 @@
 </head>
 <body>
     <nav>
-        <h1>Sistema de Becas IFARHU</h1>
-        <a href="/inicio">Inicio</a>
-        <a href="/estudiantes">Estudiantes</a>
-        <a href="/universidades">Universidades</a>
+        <div class="nav-marca">
+            <img src="{{ url_for('static', filename='img/logo-ifarhu.png') }}" alt="" class="nav-logo">
+            <span class="nav-titulo">Sistema de Becas</span>
+        </div>
+        <div class="nav-enlaces">
+            <a href="/inicio" class="{{ 'nav-activo' if request.path == '/inicio' }}">Inicio</a>
+            <a href="/estudiantes" class="{{ 'nav-activo' if request.path == '/estudiantes' }}">Estudiantes</a>
+            <a href="/universidades" class="{{ 'nav-activo' if request.path == '/universidades' }}">Universidades</a>
+        </div>
+        <div class="nav-usuario">
+            <span class="nav-nombre">{{ usuario_nombre | default('Administrador') }}</span>
+            <a href="{{ url_for('logout') }}" class="nav-salir">Cerrar sesión</a>
+        </div>
     </nav>
     <main>
         {% block contenido %}{% endblock %}

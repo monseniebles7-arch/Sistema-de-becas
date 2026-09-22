@@ -49,7 +49,7 @@ def logout():
     session.pop("usuario", None)
     return redirect(url_for("login"))
 
- @app.route("/estudiantes/registrar", methods=["GET", "POST"])
+@app.route("/registrar-estudiante", methods=["GET", "POST"])
 @requiere_login
 def registrar_estudiante():
     conexion = obtener_conexion()
@@ -74,15 +74,15 @@ def registrar_estudiante():
             conexion.commit()
             cursor.close()
             conexion.close()
-            return render_template("registrar_estudiante.html", universidades=universidades, exito=True)
+            return render_template("registrar-estudiante.html", universidades=universidades, exito=True)
         except Exception as error:
             cursor.close()
             conexion.close()
-            return render_template("registrar_estudiante.html", universidades=universidades, error=f"No se pudo registrar: {error}")
+            return render_template("registrar-estudiante.html", universidades=universidades, error=f"No se pudo registrar: {error}")
 
     cursor.close()
     conexion.close()
-    return render_template("registrar_estudiante.html", universidades=universidades)
+    return render_template("registrar-estudiante.html", universidades=universidades)
 
 @app.route("/inicio")
 @requiere_login
