@@ -98,6 +98,27 @@ def inicio():
     except Exception as error:
         return render_template("index.html", mensaje=f"Error de conexión: {error}", total=0)
 
+@app.route("/estudiantes")
+@requiere_login
+def listar_estudiantes():
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT
+            e.cedula,
+            e.nombre,
+            e.apellido,
+            u.nombre AS universidad,
+            e.correo,
+            e.telefono
+        FROM estudiantes e
+        LEFT JOIN universidades u ON e.universidad_id = u.id
+        ORDER BY e.apellido, e.nombre
+    """)
+    estudiantes = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return render_template("estudiantes.html", estudiantes=estudiantes)
 
 if __name__ == "__main__":
     app.run(debug=True)

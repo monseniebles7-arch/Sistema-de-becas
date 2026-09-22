@@ -543,3 +543,54 @@ th {
     }
 }
 }
+
+/* ===== Barra de búsqueda ===== */
+.barra-busqueda {
+    margin-bottom: 1rem;
+}
+
+.barra-busqueda input {
+    width: 100%;
+    max-width: 420px;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #C7CDD6;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #2E3B4E;
+    background-color: #FFFFFF;
+    font-family: inherit;
+}
+
+.barra-busqueda input:focus {
+    outline: 2px solid #0B3D66;
+    outline-offset: 1px;
+    border-color: #0B3D66;
+}
+
+/* ===== Tarjeta contenedora de tablas ===== */
+.tarjeta-formulario:has(table) {
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+.tarjeta-formulario table {
+    margin-top: 0;
+}
+
+.tarjeta-formulario th:first-child,
+.tarjeta-formulario td:first-child {
+    padding-left: 1.5rem;
+}
+
+.tarjeta-formulario th:last-child,
+.tarjeta-formulario td:last-child {
+    padding-right: 1.5rem;
+}
+
+.sin-resultados {
+    padding: 1.5rem;
+    text-align: center;
+    color: #5A6472;
+    font-size: 0.9rem;
+}
