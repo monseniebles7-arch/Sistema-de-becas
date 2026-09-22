@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from conexion import obtener_conexion
 from functools import wraps
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "cambiar_esto_en_produccion"
@@ -19,13 +20,24 @@ def raiz():
         return redirect(url_for("inicio"))
     return redirect(url_for("login"))
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         usuario = request.form.get("usuario")
         contrasena = request.form.get("contrasena")
-        # TODO: tu compañero valida esto contra la tabla de administradores
-        if usuario == "admin" and contrasena == "admin":
+
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
+        cursor.execute(
+            "SELECT contrasena_hash FROM administradores WHERE usuario = %s",
+            (usuario,)
+        )
+        resultado = cursor.fetchone()
+        cursor.close()
+        conexion.close()
+
+        if resultado and check_password_hash(resultado[0], contrasena):
             session["usuario"] = usuario
             return redirect(url_for("inicio"))
         else:
