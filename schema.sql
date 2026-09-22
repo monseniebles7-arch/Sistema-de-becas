@@ -19,3 +19,13 @@ CREATE TABLE `estudiantes` (
   KEY `universidad_id` (`universidad_id`),
   CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`universidad_id`) REFERENCES `universidades` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `administradores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(50) NOT NULL,
+  `contrasena_hash` varchar(255) NOT NULL,
+  `nombre_completo` varchar(150) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `usuario` (`usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
