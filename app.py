@@ -49,6 +49,41 @@ def logout():
     session.pop("usuario", None)
     return redirect(url_for("login"))
 
+ @app.route("/estudiantes/registrar", methods=["GET", "POST"])
+@requiere_login
+def registrar_estudiante():
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("SELECT id, nombre FROM universidades ORDER BY nombre")
+    universidades = cursor.fetchall()
+
+    if request.method == "POST":
+        cedula = request.form.get("cedula")
+        nombre = request.form.get("nombre")
+        apellido = request.form.get("apellido")
+        universidad_id = request.form.get("universidad_id")
+        correo = request.form.get("correo")
+        telefono = request.form.get("telefono")
+
+        try:
+            cursor.execute(
+                """INSERT INTO estudiantes (cedula, nombre, apellido, universidad_id, correo, telefono)
+                   VALUES (%s, %s, %s, %s, %s, %s)""",
+                (cedula, nombre, apellido, universidad_id, correo, telefono)
+            )
+            conexion.commit()
+            cursor.close()
+            conexion.close()
+            return render_template("registrar_estudiante.html", universidades=universidades, exito=True)
+        except Exception as error:
+            cursor.close()
+            conexion.close()
+            return render_template("registrar_estudiante.html", universidades=universidades, error=f"No se pudo registrar: {error}")
+
+    cursor.close()
+    conexion.close()
+    return render_template("registrar_estudiante.html", universidades=universidades)
+
 @app.route("/inicio")
 @requiere_login
 def inicio():
@@ -63,5 +98,8 @@ def inicio():
     except Exception as error:
         return render_template("index.html", mensaje=f"Error de conexión: {error}", total=0)
 
+
 if __name__ == "__main__":
     app.run(debug=True)
+
+   
