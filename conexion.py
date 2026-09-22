@@ -10,5 +10,6 @@ def obtener_conexion():
         user=os.environ.get("DB_USER", "root"),
         password=os.environ.get("DB_PASSWORD", ""),
         database=os.environ.get("DB_NAME", "sistemabecas"),
-        port=int(os.environ.get("DB_PORT", 3306))
+        port=int(os.environ.get("DB_PORT", 3306)),
+         charset="utf8mb4"
     )

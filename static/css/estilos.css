@@ -410,6 +410,112 @@ th {
     font-weight: 600;
 }
 
+/* ===== Formularios internos (registro, edición) ===== */
+.encabezado-pagina {
+    margin-bottom: 1.5rem;
+}
+
+.encabezado-pagina h2 {
+    font-size: 1.6rem;
+    color: #0B3D66;
+    margin-bottom: 0.3rem;
+}
+
+.encabezado-pagina p {
+    color: #5A6472;
+    font-size: 0.9rem;
+}
+
+.tarjeta-formulario {
+    background-color: #FFFFFF;
+    border-radius: 6px;
+    border: 1px solid #E2E5EA;
+    padding: 2rem;
+    max-width: 640px;
+}
+
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.grupo-campo {
+    margin-bottom: 1.2rem;
+}
+
+.grupo-campo label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2E3B4E;
+    margin-bottom: 0.4rem;
+}
+
+.grupo-campo input,
+.grupo-campo select {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #C7CDD6;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #2E3B4E;
+    background-color: #FFFFFF;
+    font-family: inherit;
+}
+
+.grupo-campo input:focus,
+.grupo-campo select:focus {
+    outline: 2px solid #0B3D66;
+    outline-offset: 1px;
+    border-color: #0B3D66;
+}
+
+.acciones-formulario {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+.boton-primario {
+    background-color: #0B3D66;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.boton-primario:hover {
+    background-color: #0A3459;
+}
+
+.boton-secundario {
+    background-color: #FFFFFF;
+    color: #2E3B4E;
+    border: 1px solid #C7CDD6;
+    border-radius: 4px;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.mensaje-exito {
+    background-color: #E8F5EA;
+    border: 1px solid #B7DCC0;
+    color: #256B34;
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 800px) {
     .contenedor-login {
@@ -431,4 +537,9 @@ th {
     .tarjeta-accion {
         min-width: 100%;
     }
+    @media (max-width: 600px) {
+    .fila-campos {
+        grid-template-columns: 1fr;
+    }
+}
 }
