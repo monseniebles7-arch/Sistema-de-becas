@@ -726,3 +726,67 @@ main > .mensaje-error,
     color: #5A6472;
     font-size: 0.9rem;
 }
+
+.opciones-radio {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.65rem 0;
+}
+
+.radio-opcion {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #2E3B4E;
+    cursor: pointer;
+}
+
+.radio-opcion input[type="radio"] {
+    width: auto;
+    cursor: pointer;
+}
+/* ===== Autocompletado de centros educativos ===== */
+.campo-autocompletar {
+    position: relative;
+}
+
+.lista-sugerencias {
+    display: none;
+    position: absolute;
+    top: calc(100% - 1.2rem);
+    left: 0;
+    right: 0;
+    z-index: 10;
+    max-height: 240px;
+    overflow-y: auto;
+    list-style: none;
+    background-color: #FFFFFF;
+    border: 1px solid #C7CDD6;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 10px rgba(5, 27, 48, 0.14);
+}
+
+.lista-sugerencias:not(:empty) {
+    display: block;
+}
+
+.sugerencia-item,
+.sugerencia-vacia {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
+}
+
+.sugerencia-item {
+    cursor: pointer;
+}
+
+.sugerencia-item:hover {
+    background-color: #EDF1F5;
+    color: #0B3D66;
+}
+
+.sugerencia-vacia {
+    color: #5A6472;
+}

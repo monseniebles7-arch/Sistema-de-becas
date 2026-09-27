@@ -8,11 +8,11 @@
                 <label for="cedula">Cédula</label>
                 <input type="text" id="cedula" name="cedula" required>
             </div>
-            <div class="grupo-campo">
-                <label for="universidad_id">Universidad</label>
-                <select id="universidad_id" name="universidad_id" required>
-                    <option value="">Cargando universidades...</option>
-                </select>
+            <div class="grupo-campo campo-autocompletar">
+                <label for="universidad_busqueda">Centro educativo</label>
+                <input type="text" id="universidad_busqueda" placeholder="Escriba el nombre del centro educativo" autocomplete="off" required>
+                <input type="hidden" id="universidad_id" name="universidad_id">
+                <ul class="lista-sugerencias" id="lista-sugerencias"></ul>
             </div>
         </div>
         <div class="fila-campos">
