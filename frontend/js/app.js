@@ -8,7 +8,10 @@ import { loadView } from "./ui.js";
 const app = document.querySelector("#app");
 
 function navigate(view) {
-    window.location.hash = view;
+    if (window.location.hash !== view) {
+        window.history.pushState(null, "", view);
+    }
+    render(view);
 }
 
 async function renderShell() {
@@ -24,9 +27,10 @@ async function renderPrivateView(view) {
     await renderShell();
     const content = document.querySelector("#view-content");
 
-    if (view === "#registrar") {
+    const editMatch = view.match(/^#editar-estudiante\/(\d+)$/);
+    if (view === "#registrar" || editMatch) {
         content.innerHTML = await loadView("views/registrar-estudiante.html");
-        await renderRegister();
+        await renderRegister(editMatch ? Number(editMatch[1]) : null);
     } else if (view === "#estudiantes") {
         content.innerHTML = await loadView("views/estudiantes.html");
         await renderStudents();
@@ -36,16 +40,27 @@ async function renderPrivateView(view) {
     }
 }
 
-async function render() {
+async function render(view = window.location.hash || "#inicio") {
     if (!api.getToken()) {
         await renderLogin(app);
         return;
     }
 
-    const view = window.location.hash || "#inicio";
     await renderPrivateView(view);
 }
 
-window.addEventListener("hashchange", render);
+app.addEventListener("click", (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const view = link.getAttribute("href");
+    if (!["#inicio", "#estudiantes", "#registrar", "#login"].includes(view)) return;
+
+    event.preventDefault();
+    navigate(view);
+});
+
+window.addEventListener("hashchange", () => render());
+window.addEventListener("popstate", () => render());
 window.addEventListener("auth-expired", () => navigate("#login"));
 render();

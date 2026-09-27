@@ -898,6 +898,52 @@ main > .mensaje-error,
     overflow-wrap: anywhere;
 }
 
+.archivo-seleccionado-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0.2rem 0.45rem 0.2rem 0;
+}
+
+.boton-quitar-archivo {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #B4232B;
+    border-radius: 4px;
+    background: #FFFFFF;
+    color: #A51F27;
+    font: inherit;
+    font-size: 0.76rem;
+    cursor: pointer;
+}
+
+.boton-quitar-archivo:hover,
+.boton-quitar-archivo:focus-visible {
+    background: #FFF0F0;
+}
+
+.archivo-existente {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.65rem 0;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid #D7DEE7;
+    border-radius: 5px;
+    background: #FAFBFC;
+}
+
+.archivo-existente strong,
+.archivo-existente small {
+    display: block;
+}
+
+.acciones-archivo-existente {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 .boton-subir-archivo {
     flex: 0 0 auto;
     padding: 0.6rem 0.9rem;
@@ -949,5 +995,10 @@ main > .mensaje-error,
 
     .boton-subir-archivo {
         width: 100%;
+    }
+
+    .archivo-existente {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }

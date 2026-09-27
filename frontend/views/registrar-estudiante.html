@@ -1,12 +1,18 @@
 <div class="encabezado-pagina">
-    <h2>Registrar estudiante</h2>
-    <p>Complete la información del estudiante y adjunte los documentos solicitados para su programa.</p>
+    <h2 id="register-title">Registrar estudiante</h2>
+    <p id="register-description">Complete la información del estudiante y adjunte los documentos solicitados para su programa.</p>
     <p class="nota-requisitos">Los requisitos dependen del programa y de la convocatoria vigente. Consulte los <a href="https://www.ifarhu.gob.pa/recepcion-de-documentos-de-estudiantes-preseleccionados-2026/" target="_blank" rel="noopener noreferrer">documentos oficiales de IFARHU para 2026</a>.</p>
 </div>
 <div id="register-message" aria-live="polite"></div>
 
 <div class="tarjeta-formulario">
     <form id="student-form" novalidate>
+        <section id="existing-documents-section" class="seccion-registro" hidden>
+            <h3>Documentos guardados</h3>
+            <p>Puede reemplazar o quitar documentos vinculados a este estudiante.</p>
+            <div id="existing-documents-list"></div>
+            <div id="existing-documents-message" aria-live="polite"></div>
+        </section>
         <section class="seccion-registro" aria-labelledby="identidad-heading">
             <h3 id="identidad-heading">1. Datos de identidad</h3>
             <div class="fila-campos">
@@ -324,7 +330,7 @@
 
         <div class="acciones-formulario">
             <button type="submit" class="boton-primario" id="registrar-estudiante">Registrar estudiante y documentos</button>
-            <a href="#inicio" class="boton-secundario">Cancelar</a>
+            <a href="#estudiantes" class="boton-secundario">Cancelar</a>
         </div>
         <p class="nota-privacidad">Los archivos se asociarán al expediente creado. No adjunte información que el trámite no solicite.</p>
     </form>

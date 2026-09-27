@@ -73,6 +73,15 @@ export const api = {
     listarEstudiantes() {
         return request("/estudiantes");
     },
+    obtenerEstudiante(id) {
+        return request(`/estudiantes/${id}`);
+    },
+    actualizarEstudiante(id, estudiante) {
+        return request(`/estudiantes/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(estudiante)
+        });
+    },
     listarUniversidades() {
         return request("/universidades");
     },
@@ -91,5 +100,16 @@ export const api = {
         body.append("tipo_documento_id", tipoDocumentoId);
         body.append("archivo", archivo);
         return request("/documentos", { method: "POST", body });
+    },
+    listarDocumentos(estudianteId) {
+        return request(`/estudiantes/${estudianteId}/documentos`);
+    },
+    reemplazarDocumento(documentoId, archivo) {
+        const body = new FormData();
+        body.append("archivo", archivo);
+        return request(`/documentos/${documentoId}`, { method: "PUT", body });
+    },
+    eliminarDocumento(documentoId) {
+        return request(`/documentos/${documentoId}`, { method: "DELETE" });
     }
 };
