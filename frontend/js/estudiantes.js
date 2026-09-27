@@ -9,7 +9,7 @@ export async function renderStudents() {
             <tr>
                 <td>${escapeHtml(student.cedula)}</td>
                 <td>${escapeHtml(student.nombre)} ${escapeHtml(student.apellido)}</td>
-                <td>${escapeHtml(student.universidad || "Sin universidad")}</td>
+                <td>${escapeHtml(student.centro_educativo || student.universidad || "Sin centro educativo")}</td>
                 <td>${escapeHtml(student.correo || "-")}</td>
             </tr>`).join("");
         content.innerHTML = rows

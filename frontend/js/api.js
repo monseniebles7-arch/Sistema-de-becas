@@ -76,10 +76,20 @@ export const api = {
     listarUniversidades() {
         return request("/universidades");
     },
+    listarTiposDocumento() {
+        return request("/tipos-documento");
+    },
     registrarEstudiante(estudiante) {
         return request("/estudiantes", {
             method: "POST",
             body: JSON.stringify(estudiante)
         });
+    },
+    subirDocumento(estudianteId, tipoDocumentoId, archivo) {
+        const body = new FormData();
+        body.append("estudiante_id", estudianteId);
+        body.append("tipo_documento_id", tipoDocumentoId);
+        body.append("archivo", archivo);
+        return request("/documentos", { method: "POST", body });
     }
 };

@@ -790,3 +790,164 @@ main > .mensaje-error,
 .sugerencia-vacia {
     color: #5A6472;
 }
+
+/* ===== Formulario completo de registro ===== */
+#student-form [hidden] {
+    display: none !important;
+}
+
+.seccion-registro {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #E2E5EA;
+}
+
+.seccion-registro:first-child {
+    padding-top: 0;
+}
+
+.seccion-registro h3 {
+    margin-bottom: 0.85rem;
+    color: #0B3D66;
+    font-size: 1.15rem;
+}
+
+.seccion-registro > p,
+.campo-ayuda p {
+    margin: 0 0 1rem;
+    color: #5A6472;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.nota-requisitos {
+    margin-top: 0.6rem;
+    color: #5A6472;
+    font-size: 0.82rem;
+}
+
+.nota-requisitos a {
+    text-decoration: underline;
+}
+
+.grupo-campo small,
+.upload-card small {
+    display: block;
+    margin-top: 0.35rem;
+    color: #5A6472;
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.grupo-campo textarea {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #C7CDD6;
+    border-radius: 4px;
+    color: #2E3B4E;
+    font: inherit;
+    resize: vertical;
+}
+
+.grupo-campo textarea:focus {
+    outline: 2px solid #0B3D66;
+    outline-offset: 1px;
+    border-color: #0B3D66;
+}
+
+.grupo-campo-corto {
+    max-width: 320px;
+}
+
+.documentos-registro {
+    margin: 1rem 0;
+}
+
+.documentos-registro h4 {
+    margin-bottom: 0.75rem;
+    color: #2E3B4E;
+    font-size: 0.95rem;
+}
+
+.upload-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.7rem 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid #D7DEE7;
+    border-radius: 5px;
+    background: #FAFBFC;
+}
+
+.upload-card > div {
+    min-width: 0;
+}
+
+.upload-card strong {
+    display: block;
+    color: #2E3B4E;
+    font-size: 0.88rem;
+}
+
+.archivo-seleccionado {
+    display: block;
+    margin-top: 0.35rem;
+    color: #0B3D66;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+}
+
+.boton-subir-archivo {
+    flex: 0 0 auto;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #0B3D66;
+    border-radius: 4px;
+    background: #FFFFFF;
+    color: #0B3D66;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.boton-subir-archivo:hover,
+.boton-subir-archivo:focus-visible {
+    background: #EDF4FA;
+}
+
+.boton-subir-archivo:focus-visible,
+.boton-primario:focus-visible,
+.boton-secundario:focus-visible {
+    outline: 2px solid #C1272D;
+    outline-offset: 2px;
+}
+
+.campo-ayuda {
+    align-self: center;
+    padding: 0.65rem 0.8rem;
+    border-left: 3px solid #0F548B;
+    background: #EDF4FA;
+}
+
+.campo-ayuda p {
+    margin: 0;
+}
+
+.nota-privacidad {
+    margin-top: 0.9rem;
+    color: #5A6472;
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 600px) {
+    .upload-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .boton-subir-archivo {
+        width: 100%;
+    }
+}

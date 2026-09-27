@@ -1,43 +1,331 @@
-<h2>Registrar estudiante</h2>
-<p>Complete los datos del estudiante para agregarlo al sistema.</p>
-<div id="register-message"></div>
+<div class="encabezado-pagina">
+    <h2>Registrar estudiante</h2>
+    <p>Complete la información del estudiante y adjunte los documentos solicitados para su programa.</p>
+    <p class="nota-requisitos">Los requisitos dependen del programa y de la convocatoria vigente. Consulte los <a href="https://www.ifarhu.gob.pa/recepcion-de-documentos-de-estudiantes-preseleccionados-2026/" target="_blank" rel="noopener noreferrer">documentos oficiales de IFARHU para 2026</a>.</p>
+</div>
+<div id="register-message" aria-live="polite"></div>
+
 <div class="tarjeta-formulario">
-    <form id="student-form">
-        <div class="fila-campos">
-            <div class="grupo-campo">
-                <label for="cedula">Cédula</label>
-                <input type="text" id="cedula" name="cedula" required>
+    <form id="student-form" novalidate>
+        <section class="seccion-registro" aria-labelledby="identidad-heading">
+            <h3 id="identidad-heading">1. Datos de identidad</h3>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" maxlength="100" autocomplete="given-name" required>
+                </div>
+                <div class="grupo-campo">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" maxlength="100" autocomplete="family-name" required>
+                </div>
             </div>
-            <div class="grupo-campo campo-autocompletar">
-                <label for="universidad_busqueda">Centro educativo</label>
-                <input type="text" id="universidad_busqueda" placeholder="Escriba el nombre del centro educativo" autocomplete="off" required>
-                <input type="hidden" id="universidad_id" name="universidad_id">
-                <ul class="lista-sugerencias" id="lista-sugerencias"></ul>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="fecha_nacimiento">Fecha de nacimiento</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                </div>
+                <div class="grupo-campo">
+                    <label for="sexo">Sexo</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="">Seleccione</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="otro">Otro</option>
+                        <option value="no_indica">Prefiero no indicar</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="fila-campos">
-            <div class="grupo-campo">
-                <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" required>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="tipo_identificacion">Tipo de identificación</label>
+                    <select id="tipo_identificacion" name="tipo_identificacion" required>
+                        <option value="">Seleccione</option>
+                        <option value="cedula_juvenil">Cédula juvenil</option>
+                        <option value="certificado_nacimiento">Certificado de nacimiento</option>
+                        <option value="cedula">Cédula de identidad personal</option>
+                        <option value="pasaporte">Pasaporte</option>
+                    </select>
+                </div>
+                <div class="grupo-campo">
+                    <label for="cedula">Número de identificación</label>
+                    <input type="text" id="cedula" name="cedula" maxlength="20" autocomplete="off" required>
+                </div>
             </div>
-            <div class="grupo-campo">
-                <label for="apellido">Apellido</label>
-                <input type="text" id="apellido" name="apellido" required>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="nacionalidad">Nacionalidad</label>
+                    <select id="nacionalidad" name="nacionalidad" required>
+                        <option value="">Seleccione</option>
+                        <option value="panamena">Panameña</option>
+                        <option value="extranjera">Otra nacionalidad</option>
+                    </select>
+                </div>
+                <div class="grupo-campo">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" maxlength="150" autocomplete="email">
+                </div>
             </div>
-        </div>
-        <div class="fila-campos">
-            <div class="grupo-campo">
-                <label for="correo">Correo</label>
-                <input type="email" id="correo" name="correo">
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" maxlength="20" autocomplete="tel">
+                </div>
+                <div class="grupo-campo conditional" id="residencia-section" hidden>
+                    <label for="anios_residencia">Años de residencia en Panamá</label>
+                    <input type="number" id="anios_residencia" name="anios_residencia" min="0" max="120" step="1">
+                    <small>Si el programa lo exige, adjunte la certificación migratoria.</small>
+                </div>
             </div>
-            <div class="grupo-campo">
-                <label for="telefono">Teléfono</label>
-                <input type="text" id="telefono" name="telefono">
+
+            <div class="documentos-registro">
+                <h4>Documentos de identidad</h4>
+                <div class="upload-card" data-upload-card="identificacion_estudiante">
+                    <div><strong>Identificación del estudiante</strong><small>Cédula juvenil, certificado de nacimiento, cédula o pasaporte. PDF, JPG o PNG; máximo 10 MB por archivo.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                    <input class="input-archivo" id="archivo-identificacion" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                    <button class="boton-subir-archivo" type="button" data-file-target="archivo-identificacion">Subir archivos</button>
+                </div>
+                <div class="upload-card" data-upload-card="foto_carne">
+                    <div><strong>Fotografía tamaño carné</strong><small>Imagen reciente en formato JPG o PNG.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                    <input class="input-archivo" id="archivo-foto" type="file" accept=".png,.jpg,.jpeg" hidden>
+                    <button class="boton-subir-archivo" type="button" data-file-target="archivo-foto">Subir archivo</button>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <section class="seccion-registro conditional" id="representante-section" aria-labelledby="representante-heading" hidden>
+            <h3 id="representante-heading">2. Representante legal</h3>
+            <p>Completar para estudiantes menores de edad.</p>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="representante_nombre">Nombre completo del padre, madre o tutor</label>
+                    <input type="text" id="representante_nombre" name="representante_nombre" maxlength="150">
+                </div>
+                <div class="grupo-campo">
+                    <label for="representante_cedula">Cédula del representante</label>
+                    <input type="text" id="representante_cedula" name="representante_cedula" maxlength="20">
+                </div>
+            </div>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="representante_parentesco">Parentesco o relación</label>
+                    <input type="text" id="representante_parentesco" name="representante_parentesco" maxlength="60">
+                </div>
+                <div class="grupo-campo">
+                    <label for="representante_telefono">Teléfono del representante</label>
+                    <input type="tel" id="representante_telefono" name="representante_telefono" maxlength="20">
+                </div>
+            </div>
+            <div class="upload-card" data-upload-card="identificacion_representante">
+                <div><strong>Identificación del representante</strong><small>Copia de la cédula del padre, madre o tutor. PDF, JPG o PNG.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                <input class="input-archivo" id="archivo-representante" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                <button class="boton-subir-archivo" type="button" data-file-target="archivo-representante">Subir archivos</button>
+            </div>
+        </section>
+
+        <section class="seccion-registro conditional" id="extranjero-section" aria-labelledby="extranjero-heading" hidden>
+            <h3 id="extranjero-heading">Estatus migratorio</h3>
+            <p>Complete esta sección si el estudiante es extranjero y el programa solicita acreditar residencia en Panamá.</p>
+            <div class="grupo-campo grupo-campo-corto">
+                <label for="pais_origen">País de nacionalidad</label>
+                <input type="text" id="pais_origen" name="pais_origen" maxlength="60">
+            </div>
+            <div class="upload-card" data-upload-card="constancia_migratoria">
+                <div><strong>Certificación del Servicio Nacional de Migración</strong><small>Adjunte el documento requerido por el programa. PDF, JPG o PNG.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                <input class="input-archivo" id="archivo-migracion" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                <button class="boton-subir-archivo" type="button" data-file-target="archivo-migracion">Subir archivos</button>
+            </div>
+        </section>
+
+        <section class="seccion-registro" aria-labelledby="academico-heading">
+            <h3 id="academico-heading">3. Información académica</h3>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="nivel_educativo">Nivel educativo</label>
+                    <select id="nivel_educativo" name="nivel_educativo" required>
+                        <option value="">Seleccione</option>
+                        <option value="primaria">Primaria</option>
+                        <option value="premedia">Premedia</option>
+                        <option value="media">Media</option>
+                        <option value="tecnico">Técnico</option>
+                        <option value="licenciatura">Licenciatura</option>
+                        <option value="maestria">Maestría</option>
+                        <option value="doctorado">Doctorado</option>
+                    </select>
+                </div>
+                <div class="grupo-campo">
+                    <label for="programa_solicitado">Programa de interés</label>
+                    <select id="programa_solicitado" name="programa_solicitado" required>
+                        <option value="">Seleccione</option>
+                        <option value="concurso_general">Concurso General de Becas</option>
+                        <option value="pase_u">PASE-U</option>
+                        <option value="socioeconomico">Beca socioeconómica</option>
+                        <option value="discapacidad">Apoyo económico por discapacidad</option>
+                        <option value="otro">Otro / por definir</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fila-campos">
+                <div class="grupo-campo campo-autocompletar">
+                    <label for="universidad_busqueda">Centro educativo</label>
+                    <input type="text" id="universidad_busqueda" name="centro_educativo" placeholder="Escriba el nombre de la escuela, colegio o universidad" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lista-sugerencias" required>
+                    <input type="hidden" id="universidad_id" name="universidad_id">
+                    <ul class="lista-sugerencias" id="lista-sugerencias" role="listbox"></ul>
+                    <small>Puede elegir una sugerencia o escribir el nombre completo de otro centro.</small>
+                </div>
+                <div class="grupo-campo">
+                    <label for="tipo_centro">Tipo de centro</label>
+                    <select id="tipo_centro" name="tipo_centro">
+                        <option value="">Seleccione</option>
+                        <option value="publica">Público</option>
+                        <option value="privada">Privado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fila-campos conditional" id="universidad-fields" hidden>
+                <div class="grupo-campo">
+                    <label for="carrera">Carrera o programa de estudios</label>
+                    <input type="text" id="carrera" name="carrera" maxlength="150">
+                </div>
+                <div class="grupo-campo">
+                    <label for="tipo_carrera">Situación universitaria</label>
+                    <select id="tipo_carrera" name="tipo_carrera">
+                        <option value="">Seleccione</option>
+                        <option value="primer_ingreso">Inicio / primer ingreso</option>
+                        <option value="continuacion">Continuación de carrera</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fila-campos conditional" id="escolar-fields" hidden>
+                <div class="grupo-campo">
+                    <label for="promedio_academico">Promedio académico (escala de 0 a 5)</label>
+                    <input type="number" id="promedio_academico" name="promedio_academico" min="0" max="5" step="0.01">
+                </div>
+                <div class="grupo-campo campo-ayuda">
+                    <p id="referencia-academica">Ingrese el promedio indicado en el boletín oficial.</p>
+                </div>
+            </div>
+            <div class="fila-campos conditional" id="indice-fields" hidden>
+                <div class="grupo-campo">
+                    <label for="indice_academico">Índice académico (escala de 0 a 3)</label>
+                    <input type="number" id="indice_academico" name="indice_academico" min="0" max="3" step="0.01">
+                </div>
+                <div class="grupo-campo campo-ayuda">
+                    <p id="referencia-indice">Ingrese el índice que aparece en los créditos oficiales.</p>
+                </div>
+            </div>
+
+            <div class="documentos-registro conditional" id="boletin-section" hidden>
+                <div class="upload-card" data-upload-card="boletin_calificaciones">
+                    <div><strong>Boletín de calificaciones</strong><small>Documento oficial del año anterior, con firma o sello si el programa lo requiere.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                    <input class="input-archivo" id="archivo-boletin" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                    <button class="boton-subir-archivo" type="button" data-file-target="archivo-boletin">Subir archivos</button>
+                </div>
+            </div>
+            <div class="documentos-registro conditional" id="universidad-docs-section" hidden>
+                <div class="upload-card" data-upload-card="creditos_academicos">
+                    <div><strong>Créditos académicos oficiales</strong><small>Completos, firmados/sellados o con código QR, según corresponda.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                    <input class="input-archivo" id="archivo-creditos" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                    <button class="boton-subir-archivo" type="button" data-file-target="archivo-creditos">Subir archivos</button>
+                </div>
+                <div class="upload-card" data-upload-card="comprobante_matricula">
+                    <div><strong>Recibo o certificación de matrícula</strong><small>Vigente para el período académico que corresponda.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                    <input class="input-archivo" id="archivo-matricula" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                    <button class="boton-subir-archivo" type="button" data-file-target="archivo-matricula">Subir archivos</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion-registro" aria-labelledby="socioeconomico-heading">
+            <h3 id="socioeconomico-heading">4. Información socioeconómica</h3>
+            <p>Estos datos apoyan la revisión del expediente; complete solo lo que corresponda al programa.</p>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="ingreso_familiar">Ingreso mensual aproximado del hogar (B/.)</label>
+                    <input type="number" id="ingreso_familiar" name="ingreso_familiar" min="0" step="0.01">
+                </div>
+                <div class="grupo-campo">
+                    <label for="personas_hogar">Personas que viven en el hogar</label>
+                    <input type="number" id="personas_hogar" name="personas_hogar" min="1" max="50" step="1">
+                </div>
+            </div>
+            <div class="upload-card" data-upload-card="declaracion_socioeconomica">
+                <div><strong>Declaración jurada socioeconómica</strong><small>Adjúntela si fue solicitada para el programa.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                <input class="input-archivo" id="archivo-declaracion" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                <button class="boton-subir-archivo" type="button" data-file-target="archivo-declaracion">Subir archivos</button>
+            </div>
+        </section>
+
+        <section class="seccion-registro" aria-labelledby="condiciones-heading">
+            <h3 id="condiciones-heading">5. Condiciones especiales</h3>
+            <div class="grupo-campo grupo-campo-corto">
+                <label for="tiene_discapacidad">¿Solicita apoyo por discapacidad?</label>
+                <select id="tiene_discapacidad" name="tiene_discapacidad">
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                </select>
+            </div>
+            <div class="conditional" id="discapacidad-section" hidden>
+                <div class="grupo-campo">
+                    <label for="detalle_discapacidad">Información para el trámite (opcional)</label>
+                    <textarea id="detalle_discapacidad" name="detalle_discapacidad" rows="3" maxlength="500"></textarea>
+                </div>
+                <div class="upload-card" data-upload-card="formulario_discapacidad">
+                    <div><strong>Formulario o certificación de discapacidad</strong><small>Adjunte el formulario y la certificación médica requeridos por el programa.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                    <input class="input-archivo" id="archivo-discapacidad" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                    <button class="boton-subir-archivo" type="button" data-file-target="archivo-discapacidad">Subir archivos</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion-registro" aria-labelledby="financiero-heading">
+            <h3 id="financiero-heading">6. Información financiera</h3>
+            <p>La cuenta debe pertenecer al estudiante. Complete estos datos solo si el programa gestionará pagos por vía bancaria.</p>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="banco">Banco</label>
+                    <input type="text" id="banco" name="banco" maxlength="100">
+                </div>
+                <div class="grupo-campo">
+                    <label for="tipo_cuenta">Tipo de cuenta</label>
+                    <select id="tipo_cuenta" name="tipo_cuenta">
+                        <option value="">Seleccione</option>
+                        <option value="ahorro">Ahorro</option>
+                        <option value="corriente">Corriente</option>
+                        <option value="tarjeta">Tarjeta / billetera electrónica</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fila-campos">
+                <div class="grupo-campo">
+                    <label for="numero_cuenta">Número de cuenta o referencia</label>
+                    <input type="text" id="numero_cuenta" name="numero_cuenta" maxlength="50" autocomplete="off">
+                </div>
+                <div class="grupo-campo">
+                    <label for="titular_cuenta">Titular de la cuenta</label>
+                    <input type="text" id="titular_cuenta" name="titular_cuenta" maxlength="150">
+                </div>
+            </div>
+            <div class="upload-card" data-upload-card="certificacion_bancaria">
+                <div><strong>Certificación o constancia bancaria</strong><small>Opcional. PDF, JPG o PNG.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                <input class="input-archivo" id="archivo-banco" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                <button class="boton-subir-archivo" type="button" data-file-target="archivo-banco">Subir archivos</button>
+            </div>
+        </section>
+
+        <section class="seccion-registro" aria-labelledby="otros-heading">
+            <h3 id="otros-heading">7. Otros documentos</h3>
+            <div class="upload-card" data-upload-card="otro_documento">
+                <div><strong>Documento adicional</strong><small>Adjunte archivos complementarios que el programa haya solicitado.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
+                <input class="input-archivo" id="archivo-otros" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
+                <button class="boton-subir-archivo" type="button" data-file-target="archivo-otros">Subir archivos</button>
+            </div>
+        </section>
+
         <div class="acciones-formulario">
-            <button type="submit" class="boton-primario">Registrar estudiante</button>
+            <button type="submit" class="boton-primario" id="registrar-estudiante">Registrar estudiante y documentos</button>
             <a href="#inicio" class="boton-secundario">Cancelar</a>
         </div>
+        <p class="nota-privacidad">Los archivos se asociarán al expediente creado. No adjunte información que el trámite no solicite.</p>
     </form>
 </div>

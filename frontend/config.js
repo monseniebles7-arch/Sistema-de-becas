@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-    apiBaseUrl: "http://localhost:5000"
+    apiBaseUrl: "http://127.0.0.1:5000"
 };
