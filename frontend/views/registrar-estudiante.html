@@ -1,21 +1,8 @@
-{% extends "base.html" %}
-{% block titulo %}Registrar estudiante{% endblock %}
-{% block contenido %}
-<div class="encabezado-pagina">
-    <h2>Registrar estudiante</h2>
-    <p>Complete los datos del estudiante para agregarlo al sistema</p>
-</div>
-
-{% if exito %}
-<p class="mensaje-exito">Estudiante registrado correctamente.</p>
-{% endif %}
-
-{% if error %}
-<p class="mensaje-error">{{ error }}</p>
-{% endif %}
-
+<h2>Registrar estudiante</h2>
+<p>Complete los datos del estudiante para agregarlo al sistema.</p>
+<div id="register-message"></div>
 <div class="tarjeta-formulario">
-    <form method="POST" action="{{ url_for('registrar_estudiante') }}">
+    <form id="student-form">
         <div class="fila-campos">
             <div class="grupo-campo">
                 <label for="cedula">Cédula</label>
@@ -24,14 +11,10 @@
             <div class="grupo-campo">
                 <label for="universidad_id">Universidad</label>
                 <select id="universidad_id" name="universidad_id" required>
-                    <option value="" disabled selected>Seleccione una universidad</option>
-                    {% for universidad in universidades %}
-                    <option value="{{ universidad.id }}">{{ universidad.nombre }}</option>
-                    {% endfor %}
+                    <option value="">Cargando universidades...</option>
                 </select>
             </div>
         </div>
-
         <div class="fila-campos">
             <div class="grupo-campo">
                 <label for="nombre">Nombre</label>
@@ -42,7 +25,6 @@
                 <input type="text" id="apellido" name="apellido" required>
             </div>
         </div>
-
         <div class="fila-campos">
             <div class="grupo-campo">
                 <label for="correo">Correo</label>
@@ -53,11 +35,9 @@
                 <input type="text" id="telefono" name="telefono">
             </div>
         </div>
-
         <div class="acciones-formulario">
             <button type="submit" class="boton-primario">Registrar estudiante</button>
-            <a href="{{ url_for('inicio') }}" class="boton-secundario">Cancelar</a>
+            <a href="#inicio" class="boton-secundario">Cancelar</a>
         </div>
     </form>
 </div>
-{% endblock %}

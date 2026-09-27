@@ -1,5 +1,0 @@
-flask
-mysql-connector-python
-robotframework
-robotframework-requests
-python-dotenv
