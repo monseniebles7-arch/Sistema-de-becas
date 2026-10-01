@@ -1,5 +1,7 @@
 const TOKEN_KEY = "becas_token";
 const ADMIN_KEY = "becas_admin";
+const USER_KEY = "becas_user";
+const ROLE_KEY = "becas_role";
 
 function getToken() {
     return sessionStorage.getItem(TOKEN_KEY);
@@ -9,15 +11,25 @@ function getAdmin() {
     const value = sessionStorage.getItem(ADMIN_KEY);
     return value ? JSON.parse(value) : null;
 }
+function getUser() {
+    const value = sessionStorage.getItem(USER_KEY);
+    return value ? JSON.parse(value) : null;
+}
+function getRole() { return sessionStorage.getItem(ROLE_KEY) || "admin"; }
 
 function saveSession(data) {
     sessionStorage.setItem(TOKEN_KEY, data.token);
-    sessionStorage.setItem(ADMIN_KEY, JSON.stringify(data.administrador));
+    const user = data.usuario || data.administrador;
+    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    sessionStorage.setItem(ROLE_KEY, data.rol || "admin");
+    if (data.rol === "admin") sessionStorage.setItem(ADMIN_KEY, JSON.stringify(user));
 }
 
 function clearSession() {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(ADMIN_KEY);
+    sessionStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(ROLE_KEY);
 }
 
 async function request(path, options = {}) {
@@ -61,6 +73,8 @@ async function request(path, options = {}) {
 export const api = {
     getToken,
     getAdmin,
+    getUser,
+    getRole,
     clearSession,
     async login(usuario, contrasena) {
         const data = await request("/auth/login", {
@@ -69,6 +83,28 @@ export const api = {
         });
         saveSession(data);
         return data;
+    },
+    registrarCuentaEstudiante(datos) {
+        return request("/auth/registro-estudiante", { method: "POST", body: JSON.stringify(datos) });
+    },
+    perfilEstudiante() { return request("/estudiante/perfil"); },
+    misSolicitudes() { return request("/estudiante/solicitudes"); },
+    crearSolicitud(estudiante) {
+        return request("/estudiante/solicitudes", { method: "POST", body: JSON.stringify({ estudiante }) });
+    },
+    enviarSolicitud(id) { return request(`/estudiante/solicitudes/${id}/enviar`, { method: "POST", body: JSON.stringify({}) }); },
+    subirDocumentoSolicitud(solicitudId, tipoDocumentoId, archivo) {
+        const body = new FormData();
+        body.append("tipo_documento_id", tipoDocumentoId);
+        body.append("archivo", archivo);
+        return request(`/estudiante/solicitudes/${solicitudId}/documentos`, { method: "POST", body });
+    },
+    eliminarDocumentoSolicitud(solicitudId, documentoId) {
+        return request(`/estudiante/solicitudes/${solicitudId}/documentos/${documentoId}`, { method: "DELETE" });
+    },
+    listarSolicitudesAdmin() { return request("/solicitudes"); },
+    actualizarSolicitud(id, estado, observaciones_admin) {
+        return request(`/solicitudes/${id}`, { method: "PATCH", body: JSON.stringify({ estado, observaciones_admin }) });
     },
     listarEstudiantes() {
         return request("/estudiantes");
@@ -84,6 +120,9 @@ export const api = {
     },
     listarUniversidades() {
         return request("/universidades");
+    },
+    listarProgramasBeca() {
+        return request("/programas-beca");
     },
     listarTiposDocumento() {
         return request("/tipos-documento");

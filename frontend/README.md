@@ -32,4 +32,8 @@ Abre `http://localhost:8000` en el navegador. La API debe estar activa en parale
 - Registro de estudiantes.
 - Cierre de sesión local.
 
-Becas, pagos y documentos se incorporarán en una etapa posterior.
+# Portal con acceso de estudiantes y administradores
+
+El inicio público ofrece registro e inicio de sesión compartido. El inicio de sesión envía al estudiante a `#portal-estudiante` y al administrador a su panel existente. El formulario estudiantil genera una solicitud por separado y conserva su historial.
+
+Para ejecutar esta versión, actualiza también el backend y aplica `migrations/20260927_student_application.sql` y después `migrations/20260930_student_portal.sql`. Configura `frontend/config.js` para que `apiBaseUrl` apunte al backend activo.

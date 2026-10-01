@@ -1,0 +1,10 @@
+<main class="contenedor-cuenta"><a href="#publico">← Volver al inicio</a><h2>Crear cuenta de estudiante</h2><p>Si ya existe una ficha administrativa, usa la misma cédula y el correo registrado en esa ficha para vincularla.</p><div id="account-message" aria-live="polite"></div><form id="account-form" class="tarjeta-formulario">
+    <label for="cedula-cuenta">Cédula</label><input id="cedula-cuenta" name="cedula" maxlength="11" inputmode="numeric" placeholder="8-123-1234" required>
+    <label for="nombre-cuenta">Nombre</label><input id="nombre-cuenta" name="nombre" maxlength="100" autocomplete="given-name" required>
+    <label for="apellido-cuenta">Apellido</label><input id="apellido-cuenta" name="apellido" maxlength="100" autocomplete="family-name" required>
+    <label for="correo-cuenta">Correo</label><input id="correo-cuenta" name="correo" type="email" maxlength="150" required>
+    <label for="telefono-cuenta">Teléfono</label><input id="telefono-cuenta" name="telefono" type="tel" maxlength="9" inputmode="numeric" pattern="(?:[0-9]{8}|[0-9]{4}[- ][0-9]{4})" title="Ingrese un teléfono panameño de 8 dígitos, por ejemplo 61234567 o 6123-4567." autocomplete="tel" required>
+    <label for="contrasena-cuenta">Contraseña (mínimo 8 caracteres)</label><input id="contrasena-cuenta" name="contrasena" type="password" minlength="8" autocomplete="new-password" required>
+    <label for="confirmar-cuenta">Confirmar contraseña</label><input id="confirmar-cuenta" name="confirmar_contrasena" type="password" minlength="8" autocomplete="new-password" required>
+    <button type="submit" class="boton-primario">Crear cuenta</button><p>¿Ya tienes una cuenta? <a href="#login">Inicia sesión</a>.</p>
+</form></main>

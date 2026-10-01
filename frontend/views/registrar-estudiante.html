@@ -7,6 +7,41 @@
 
 <div class="tarjeta-formulario">
     <form id="student-form" novalidate>
+        <section class="seccion-registro" aria-labelledby="programa-beca-heading">
+            <h3 id="programa-beca-heading">1. Selecciona el programa de beca</h3>
+            <p>El formulario mostrará los datos y documentos relacionados con tu selección. La disponibilidad y los requisitos finales dependen de cada convocatoria vigente.</p>
+            <div class="grupo-campo">
+                <label for="programa_solicitado">Tipo de beca o apoyo</label>
+                <select id="programa_solicitado" name="programa_solicitado" required>
+                    <option value="">Selecciona un programa</option>
+                    <optgroup label="Becas nacionales">
+                        <option value="concurso_primaria">Concurso General — Primaria</option>
+                        <option value="concurso_premedia_media">Concurso General — Premedia y Media</option>
+                        <option value="concurso_primer_ingreso">Concurso General — Universidad, primer ingreso</option>
+                        <option value="concurso_continuacion">Concurso General — Universidad, continuación</option>
+                        <option value="concurso_postgrado">Concurso General — Postgrado / Maestría</option>
+                        <option value="puesto_distinguido">Puesto distinguido</option>
+                        <option value="exoneracion">Exoneración de impuesto de inmueble</option>
+                        <option value="deporte">Beca deportiva</option>
+                        <option value="bellas_artes">Bellas artes</option>
+                        <option value="cultura">Área cultural</option>
+                        <option value="pase_u">PASE-U</option>
+                    </optgroup>
+                    <optgroup label="Apoyos y situaciones especiales">
+                        <option value="socioeconomico">Asistencia socioeconómica</option>
+                        <option value="discapacidad">Apoyo por discapacidad</option>
+                        <option value="vulnerabilidad">Vulnerabilidad / pobreza</option>
+                        <option value="corregimiento">Apoyo por corregimiento</option>
+                        <option value="trabajo_infantil">Erradicación del trabajo infantil</option>
+                    </optgroup>
+                    <optgroup label="Becas internacionales">
+                        <option value="internacional">Beca internacional</option>
+                    </optgroup>
+                </select>
+            </div>
+            <p id="programa-ayuda" class="campo-ayuda" aria-live="polite">Selecciona una opción para ver el formulario correspondiente.</p>
+        </section>
+        <div id="application-fields" hidden>
         <section id="existing-documents-section" class="seccion-registro" hidden>
             <h3>Documentos guardados</h3>
             <p>Puede reemplazar o quitar documentos vinculados a este estudiante.</p>
@@ -54,7 +89,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="cedula">Número de identificación</label>
-                    <input type="text" id="cedula" name="cedula" maxlength="20" autocomplete="off" required>
+                    <input type="text" id="cedula" name="cedula" maxlength="20" autocomplete="off" inputmode="numeric" placeholder="8-123-1234" required>
                 </div>
             </div>
             <div class="fila-campos">
@@ -68,13 +103,13 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="correo">Correo electrónico</label>
-                    <input type="email" id="correo" name="correo" maxlength="150" autocomplete="email">
+                    <input type="email" id="correo" name="correo" maxlength="150" autocomplete="email" required>
                 </div>
             </div>
             <div class="fila-campos">
                 <div class="grupo-campo">
                     <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" maxlength="20" autocomplete="tel">
+                    <input type="tel" id="telefono" name="telefono" maxlength="9" autocomplete="tel" inputmode="numeric" pattern="(?:[0-9]{8}|[0-9]{4}[- ][0-9]{4})" title="Ingrese un teléfono panameño de 8 dígitos, por ejemplo 61234567 o 6123-4567." required>
                 </div>
                 <div class="grupo-campo conditional" id="residencia-section" hidden>
                     <label for="anios_residencia">Años de residencia en Panamá</label>
@@ -108,7 +143,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="representante_cedula">Cédula del representante</label>
-                    <input type="text" id="representante_cedula" name="representante_cedula" maxlength="20">
+                    <input type="text" id="representante_cedula" name="representante_cedula" maxlength="11" inputmode="numeric" autocomplete="off" placeholder="8-123-1234">
                 </div>
             </div>
             <div class="fila-campos">
@@ -118,7 +153,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="representante_telefono">Teléfono del representante</label>
-                    <input type="tel" id="representante_telefono" name="representante_telefono" maxlength="20">
+                    <input type="tel" id="representante_telefono" name="representante_telefono" maxlength="9" inputmode="numeric" pattern="(?:[0-9]{8}|[0-9]{4}[- ][0-9]{4})" title="Ingrese un teléfono panameño de 8 dígitos, por ejemplo 61234567 o 6123-4567.">
                 </div>
             </div>
             <div class="upload-card" data-upload-card="identificacion_representante">
@@ -158,17 +193,6 @@
                         <option value="doctorado">Doctorado</option>
                     </select>
                 </div>
-                <div class="grupo-campo">
-                    <label for="programa_solicitado">Programa de interés</label>
-                    <select id="programa_solicitado" name="programa_solicitado" required>
-                        <option value="">Seleccione</option>
-                        <option value="concurso_general">Concurso General de Becas</option>
-                        <option value="pase_u">PASE-U</option>
-                        <option value="socioeconomico">Beca socioeconómica</option>
-                        <option value="discapacidad">Apoyo económico por discapacidad</option>
-                        <option value="otro">Otro / por definir</option>
-                    </select>
-                </div>
             </div>
             <div class="fila-campos">
                 <div class="grupo-campo campo-autocompletar">
@@ -180,7 +204,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="tipo_centro">Tipo de centro</label>
-                    <select id="tipo_centro" name="tipo_centro">
+                    <select id="tipo_centro" name="tipo_centro" required>
                         <option value="">Seleccione</option>
                         <option value="publica">Público</option>
                         <option value="privada">Privado</option>
@@ -192,7 +216,7 @@
                     <label for="carrera">Carrera o programa de estudios</label>
                     <input type="text" id="carrera" name="carrera" maxlength="150">
                 </div>
-                <div class="grupo-campo">
+                <div class="grupo-campo" id="tipo-carrera-field">
                     <label for="tipo_carrera">Situación universitaria</label>
                     <select id="tipo_carrera" name="tipo_carrera">
                         <option value="">Seleccione</option>
@@ -212,11 +236,11 @@
             </div>
             <div class="fila-campos conditional" id="indice-fields" hidden>
                 <div class="grupo-campo">
-                    <label for="indice_academico">Índice académico (escala de 0 a 3)</label>
+                    <label for="indice_academico">Índice académico (si aplica, escala de 0 a 3)</label>
                     <input type="number" id="indice_academico" name="indice_academico" min="0" max="3" step="0.01">
                 </div>
                 <div class="grupo-campo campo-ayuda">
-                    <p id="referencia-indice">Ingrese el índice que aparece en los créditos oficiales.</p>
+                    <p id="referencia-indice">Para educación superior, ingrese el índice que aparece en los créditos oficiales.</p>
                 </div>
             </div>
 
@@ -233,6 +257,8 @@
                     <input class="input-archivo" id="archivo-creditos" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
                     <button class="boton-subir-archivo" type="button" data-file-target="archivo-creditos">Subir archivos</button>
                 </div>
+            </div>
+            <div class="documentos-registro conditional" id="matricula-section" hidden>
                 <div class="upload-card" data-upload-card="comprobante_matricula">
                     <div><strong>Recibo o certificación de matrícula</strong><small>Vigente para el período académico que corresponda.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
                     <input class="input-archivo" id="archivo-matricula" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
@@ -241,7 +267,7 @@
             </div>
         </section>
 
-        <section class="seccion-registro" aria-labelledby="socioeconomico-heading">
+        <section class="seccion-registro" id="socioeconomico-form-section" aria-labelledby="socioeconomico-heading" hidden>
             <h3 id="socioeconomico-heading">4. Información socioeconómica</h3>
             <p>Estos datos apoyan la revisión del expediente; complete solo lo que corresponda al programa.</p>
             <div class="fila-campos">
@@ -261,10 +287,10 @@
             </div>
         </section>
 
-        <section class="seccion-registro" aria-labelledby="condiciones-heading">
+        <section class="seccion-registro" id="condiciones-section" aria-labelledby="condiciones-heading" hidden>
             <h3 id="condiciones-heading">5. Condiciones especiales</h3>
             <div class="grupo-campo grupo-campo-corto">
-                <label for="tiene_discapacidad">¿Solicita apoyo por discapacidad?</label>
+                <label for="tiene_discapacidad">¿Tiene alguna discapacidad?</label>
                 <select id="tiene_discapacidad" name="tiene_discapacidad">
                     <option value="no">No</option>
                     <option value="si">Sí</option>
@@ -272,10 +298,10 @@
             </div>
             <div class="conditional" id="discapacidad-section" hidden>
                 <div class="grupo-campo">
-                    <label for="detalle_discapacidad">Información para el trámite (opcional)</label>
+                    <label for="detalle_discapacidad">Describa la discapacidad</label>
                     <textarea id="detalle_discapacidad" name="detalle_discapacidad" rows="3" maxlength="500"></textarea>
                 </div>
-                <div class="upload-card" data-upload-card="formulario_discapacidad">
+                <div class="upload-card" id="discapacidad-upload-card" data-upload-card="formulario_discapacidad">
                     <div><strong>Formulario o certificación de discapacidad</strong><small>Adjunte el formulario y la certificación médica requeridos por el programa.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
                     <input class="input-archivo" id="archivo-discapacidad" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple hidden>
                     <button class="boton-subir-archivo" type="button" data-file-target="archivo-discapacidad">Subir archivos</button>
@@ -283,7 +309,7 @@
             </div>
         </section>
 
-        <section class="seccion-registro" aria-labelledby="financiero-heading">
+        <section class="seccion-registro" id="financiero-section" aria-labelledby="financiero-heading" hidden>
             <h3 id="financiero-heading">6. Información financiera</h3>
             <p>La cuenta debe pertenecer al estudiante. Complete estos datos solo si el programa gestionará pagos por vía bancaria.</p>
             <div class="fila-campos">
@@ -319,7 +345,7 @@
             </div>
         </section>
 
-        <section class="seccion-registro" aria-labelledby="otros-heading">
+        <section class="seccion-registro" id="otros-section" aria-labelledby="otros-heading" hidden>
             <h3 id="otros-heading">7. Otros documentos</h3>
             <div class="upload-card" data-upload-card="otro_documento">
                 <div><strong>Documento adicional</strong><small>Adjunte archivos complementarios que el programa haya solicitado.</small><span class="archivo-seleccionado">No se han seleccionado archivos.</span></div>
@@ -328,10 +354,48 @@
             </div>
         </section>
 
+        <section class="seccion-registro" id="program-specific-section" hidden aria-labelledby="program-specific-heading">
+            <h3 id="program-specific-heading">Información adicional del programa</h3>
+            <div class="fila-campos">
+                <div class="grupo-campo conditional" id="pais-destino-field" hidden>
+                    <label for="pais_destino">País donde estudiarás</label>
+                    <input type="text" id="pais_destino" maxlength="100" autocomplete="country-name">
+                </div>
+                <div class="grupo-campo conditional" id="modalidad-beca-field" hidden>
+                    <label for="modalidad_internacional">Modalidad de beca internacional</label>
+                    <select id="modalidad_internacional">
+                        <option value="">Selecciona una modalidad</option>
+                        <option value="completa">Completa</option>
+                        <option value="parcial">Parcial</option>
+                        <option value="cupo">Cupo universitario</option>
+                        <option value="ayuda">Ayuda económica</option>
+                        <option value="corta_duracion">Curso de corta duración</option>
+                        <option value="larga_duracion">Curso de larga duración / postgrado</option>
+                        <option value="licenciatura">Licenciatura</option>
+                        <option value="ingles">Curso de inglés</option>
+                    </select>
+                </div>
+                <div class="grupo-campo conditional" id="institucion-destino-field" hidden>
+                    <label for="institucion_destino">Universidad o institución de destino</label>
+                    <input type="text" id="institucion_destino" maxlength="200">
+                </div>
+                <div class="grupo-campo conditional" id="logro-field" hidden>
+                    <label for="detalle_logro">Logro, mérito o disciplina</label>
+                    <input type="text" id="detalle_logro" maxlength="200">
+                </div>
+                <div class="grupo-campo conditional" id="convocatoria-field" hidden>
+                    <label for="detalle_convocatoria">Convocatoria / curso / programa al que aplicas</label>
+                    <input type="text" id="detalle_convocatoria" maxlength="200">
+                </div>
+            </div>
+        </section>
+
         <div class="acciones-formulario">
+            <button type="button" class="boton-secundario" id="subir-documentos-solicitud" hidden>Subir archivos seleccionados</button>
             <button type="submit" class="boton-primario" id="registrar-estudiante">Registrar estudiante y documentos</button>
             <a href="#estudiantes" class="boton-secundario">Cancelar</a>
         </div>
         <p class="nota-privacidad">Los archivos se asociarán al expediente creado. No adjunte información que el trámite no solicite.</p>
+        </div>
     </form>
 </div>
