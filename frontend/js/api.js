@@ -92,6 +92,12 @@ export const api = {
     crearSolicitud(estudiante) {
         return request("/estudiante/solicitudes", { method: "POST", body: JSON.stringify({ estudiante }) });
     },
+    actualizarBorradorSolicitud(id, estudiante, parcial) {
+        return request(`/estudiante/solicitudes/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({ estudiante, parcial })
+        });
+    },
     enviarSolicitud(id) { return request(`/estudiante/solicitudes/${id}/enviar`, { method: "POST", body: JSON.stringify({}) }); },
     subirDocumentoSolicitud(solicitudId, tipoDocumentoId, archivo) {
         const body = new FormData();

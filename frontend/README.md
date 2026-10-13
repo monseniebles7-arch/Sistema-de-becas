@@ -26,14 +26,12 @@ Abre `http://localhost:8000` en el navegador. La API debe estar activa en parale
 
 ## Alcance actual
 
-- Inicio de sesión administrativo.
-- Resumen y listado de estudiantes.
-- Carga de universidades.
-- Registro de estudiantes.
-- Cierre de sesión local.
+- Inicio de sesión compartido para administradores y estudiantes, con registro de cuentas estudiantiles.
+- Panel administrativo, resumen y gestión de estudiantes y solicitudes.
+- Portal estudiantil con perfil, creación/actualización de borradores, carga de documentos e historial de solicitudes.
 
 # Portal con acceso de estudiantes y administradores
 
 El inicio público ofrece registro e inicio de sesión compartido. El inicio de sesión envía al estudiante a `#portal-estudiante` y al administrador a su panel existente. El formulario estudiantil genera una solicitud por separado y conserva su historial.
 
-Para ejecutar esta versión, actualiza también el backend y aplica `migrations/20260927_student_application.sql` y después `migrations/20260930_student_portal.sql`. Configura `frontend/config.js` para que `apiBaseUrl` apunte al backend activo.
+Para ejecutar esta versión, actualiza también el backend y aplica, en orden, `migrations/20260927_student_application.sql`, `migrations/20260930_student_portal.sql` y `migrations/20261013_application_constraints.sql`. Configura `frontend/config.js` para que `apiBaseUrl` apunte al backend activo.

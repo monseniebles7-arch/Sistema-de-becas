@@ -717,6 +717,8 @@ async function prepararArchivosSolicitud(data, files) {
             section.querySelector(":scope > p")?.replaceChildren("Puedes revisar y quitar archivos antes de enviar la solicitud.");
         }
         enlazarAccionesDocumentosExistentes();
+    } else {
+        await api.actualizarBorradorSolicitud(pendingApplicationId, data, false);
     }
     archivosPendientes = files;
     const result = await cargarArchivosPendientes();
