@@ -1,12 +1,33 @@
-<nav>
-    <h1>Sistema de Becas IFARHU</h1>
-    <a href="#inicio">Inicio</a>
-    <a href="#estudiantes">Estudiantes</a>
-    <a href="#registrar">Registrar estudiante</a>
-    <a href="#solicitudes">Solicitudes</a>
-    <button id="logout-button" class="boton-nav">Cerrar sesión</button>
-</nav>
-<main>
-    <p id="usuario-activo" class="usuario-activo"></p>
-    <section id="view-content"></section>
-</main>
+<div class="panel-layout">
+    <aside class="panel-sidebar">
+        <a class="panel-brand" href="#inicio" aria-label="Sistema de Becas, inicio">
+            <span class="panel-brand-mark" aria-hidden="true">B</span>
+            <span>Sistema de Becas<small>IFARHU · ADMINISTRACIÓN</small></span>
+        </a>
+        <div class="panel-identity">
+            <span id="panel-user-initials" class="panel-avatar" aria-hidden="true">AD</span>
+            <span id="admin-sidebar-name" class="panel-identity-name">Administrador</span>
+            <span class="panel-identity-role">Administrador</span>
+        </div>
+        <nav class="panel-nav" aria-label="Menú administrativo">
+            <span class="panel-nav-heading">GESTIÓN</span>
+            <a href="#inicio" data-admin-nav="home"><span class="panel-nav-icon" aria-hidden="true">⌂</span>Resumen</a>
+            <a href="#estudiantes" data-admin-nav="students"><span class="panel-nav-icon" aria-hidden="true">♙</span>Estudiantes</a>
+            <a href="#registrar" data-admin-nav="register"><span class="panel-nav-icon" aria-hidden="true">＋</span>Registrar estudiante</a>
+            <a href="#solicitudes" data-admin-nav="applications"><span class="panel-nav-icon" aria-hidden="true">▤</span>Solicitudes</a>
+            <button id="logout-button" type="button"><span class="panel-nav-icon" aria-hidden="true">↪</span>Cerrar sesión</button>
+        </nav>
+        <div class="panel-sidebar-note">Plataforma de gestión institucional</div>
+    </aside>
+    <div class="panel-main-column">
+        <header class="panel-topbar">
+            <div>
+                <span class="panel-eyebrow">PANEL ADMINISTRATIVO</span>
+                <h1 id="panel-page-title">Resumen</h1>
+            </div>
+            <p id="usuario-activo" class="usuario-activo"></p>
+        </header>
+        <main class="panel-main"><section id="view-content"></section></main>
+        <footer class="panel-footer"><span>Sistema de Becas IFARHU</span><span>Gestión de solicitudes y estudiantes</span></footer>
+    </div>
+</div>

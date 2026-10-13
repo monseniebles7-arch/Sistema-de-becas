@@ -27,12 +27,7 @@ async function renderPrivateView(view, role) {
     const content = document.querySelector("#view-content");
     if (role === "student") {
         const activeNav = view === "#perfil-estudiante" ? "profile" : view === "#solicitar" ? "apply" : "home";
-        document.querySelectorAll("[data-student-nav]").forEach((link) => {
-            const active = link.dataset.studentNav === activeNav;
-            link.classList.toggle("active", active);
-            if (active) link.setAttribute("aria-current", "page");
-            else link.removeAttribute("aria-current");
-        });
+        updatePanelNavigation("student", activeNav, view);
         if (view === "#solicitar") {
             let applications;
             try {
@@ -57,6 +52,10 @@ async function renderPrivateView(view, role) {
         }
         return;
     }
+    const adminNav = view === "#estudiantes" ? "students"
+        : view === "#registrar" || view.startsWith("#editar-estudiante/") ? "register"
+        : view === "#solicitudes" ? "applications" : "home";
+    updatePanelNavigation("admin", adminNav, view);
     const editMatch = view.match(/^#editar-estudiante\/(\d+)$/);
     if (view === "#registrar" || editMatch) {
         content.innerHTML = await loadView("views/registrar-estudiante.html");
@@ -70,6 +69,23 @@ async function renderPrivateView(view, role) {
     } else {
         content.innerHTML = await loadView("views/inicio.html");
         await renderHome();
+    }
+}
+
+function updatePanelNavigation(role, activeItem, view) {
+    const links = document.querySelectorAll(role === "student" ? "[data-student-nav]" : "[data-admin-nav]");
+    links.forEach((link) => {
+        const active = link.dataset[role === "student" ? "studentNav" : "adminNav"] === activeItem;
+        link.classList.toggle("active", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+    });
+    const title = document.querySelector("#panel-page-title");
+    if (title) {
+        const titles = role === "student"
+            ? { home: "Inicio", profile: "Mi perfil", apply: "Solicitar beca" }
+            : { home: "Resumen", students: "Estudiantes", register: "Registrar estudiante", applications: "Solicitudes" };
+        title.textContent = view.startsWith("#editar-estudiante/") ? "Actualizar estudiante" : titles[activeItem];
     }
 }
 

@@ -31,9 +31,16 @@ export function renderActiveAdmin() {
     const element = document.querySelector("#usuario-activo");
     if (element) {
         const nombre = admin?.nombre_completo || [admin?.nombre, admin?.apellido].filter(Boolean).join(" ") || admin?.usuario || "Usuario";
-        element.textContent = `Sesión: ${escapeHtml(nombre)} · ${api.getRole() === "student" ? "Estudiante" : "Administrador"}`;
+        element.textContent = nombre;
         const sidebarName = document.querySelector("#student-sidebar-name");
         if (sidebarName) sidebarName.textContent = [admin?.nombre, admin?.apellido].filter(Boolean).join(" ") || admin?.correo || "Estudiante";
+        const adminName = document.querySelector("#admin-sidebar-name");
+        if (adminName) adminName.textContent = nombre;
+        const initials = document.querySelector("#panel-user-initials");
+        if (initials) {
+            const parts = nombre.trim().split(/\s+/).filter(Boolean);
+            initials.textContent = parts.slice(0, 2).map((part) => part[0]).join("").toLocaleUpperCase() || "US";
+        }
     }
 }
 
