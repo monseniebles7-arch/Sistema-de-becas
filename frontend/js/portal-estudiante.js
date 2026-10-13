@@ -6,28 +6,32 @@ const labels = { borrador: "Borrador incompleto", en_revision: "En revisión", a
 export async function renderStudentPortal(container, adminView = false) {
     const target = adminView ? container.querySelector("#admin-applications") : container;
     try {
-        const rows = adminView ? await api.listarSolicitudesAdmin() : await api.misSolicitudes();
+        const [rows, profile] = adminView
+            ? [await api.listarSolicitudesAdmin(), null]
+            : await Promise.all([api.misSolicitudes(), api.perfilEstudiante()]);
+        const becaActiva = Boolean(profile?.beca_activa);
         if (!rows.length) {
             target.innerHTML = adminView ? "<p>No hay solicitudes registradas.</p>" : `
                 <div class="student-welcome"><div><p class="student-kicker">Portal estudiantil</p><h2>¡Hola, ${escapeHtml(api.getUser()?.nombre || "estudiante")}!</h2><p>Aún no has presentado una solicitud. Puedes elegir el programa que mejor se ajuste a tu situación.</p></div><div class="student-summary-number">0<span>solicitudes</span></div></div>
-                <section class="student-applications"><div class="student-section-heading"><div><p class="student-kicker">Mi historial</p><h2>Becas a las que he optado</h2></div></div><div class="student-empty"><div class="empty-icon">＋</div><h3>Comienza tu solicitud</h3><p>Solo puedes mantener una solicitud activa a la vez.</p><a class="boton-primario" href="#solicitar">Solicitar beca</a></div></section>`;
+                <section class="student-applications"><div class="student-section-heading"><div><p class="student-kicker">Mi historial</p><h2>Becas a las que he optado</h2></div></div><div class="student-empty"><div class="empty-icon">＋</div><h3>${becaActiva ? "Ya tienes una beca activa" : "Comienza tu solicitud"}</h3><p>${becaActiva ? "No puedes solicitar otra beca mientras esta siga activa." : "Solo puedes mantener una solicitud activa a la vez."}</p>${becaActiva ? "" : '<a class="boton-primario" href="#solicitar">Solicitar beca</a>'}</div></section>`;
             return;
         }
         if (!adminView) {
             const latest = rows[0];
             const link = document.querySelector('a[href="#solicitar"]');
             if (link) {
-                const canApply = ["rechazada", "borrador"].includes(latest.estado);
+                const canApply = !becaActiva && ["rechazada", "borrador"].includes(latest.estado);
                 link.classList.toggle("is-disabled", !canApply);
                 link.setAttribute("aria-disabled", String(!canApply));
-                link.title = canApply ? "Presentar solicitud" : "Podrás solicitar otra beca si rechazan la solicitud actual.";
+                link.hidden = becaActiva;
+                link.title = becaActiva ? "Ya tienes una beca activa." : canApply ? "Presentar solicitud" : "Podrás solicitar otra beca si rechazan la solicitud actual.";
             }
         }
         const activeCount = rows.filter((row) => ["borrador", "en_revision", "requiere_cambios", "aprobada"].includes(row.estado)).length;
         const name = api.getUser()?.nombre || "estudiante";
         target.innerHTML = adminView ? rows.map(renderAdminCard).join("") : `
-            <section class="student-welcome"><div><p class="student-kicker">Portal estudiantil</p><h2>¡Hola, ${escapeHtml(name)}!</h2><p>${activeCount ? "Tienes una solicitud activa. Aquí puedes consultar su avance." : "Tu historial de solicitudes de beca está aquí."}</p></div><div class="student-summary-number">${activeCount}<span>${activeCount === 1 ? "activa" : "activas"}</span></div></section>
-            <section class="student-applications"><div class="student-section-heading"><div><p class="student-kicker">Tu historial</p><h2>Becas a las que has optado</h2><p>Solo puedes tener una solicitud activa a la vez. Si es rechazada, podrás optar nuevamente.</p></div>${rows[0].estado === "rechazada" ? '<a class="boton-primario" href="#solicitar">Solicitar otra beca</a>' : ""}</div>
+            <section class="student-welcome"><div><p class="student-kicker">Portal estudiantil</p><h2>¡Hola, ${escapeHtml(name)}!</h2><p>${becaActiva ? "Tienes una beca activa." : activeCount ? "Tienes una solicitud activa. Aquí puedes consultar su avance." : "Tu historial de solicitudes de beca está aquí."}</p></div><div class="student-summary-number">${activeCount}<span>${activeCount === 1 ? "activa" : "activas"}</span></div></section>
+            <section class="student-applications"><div class="student-section-heading"><div><p class="student-kicker">Tu historial</p><h2>Becas a las que has optado</h2><p>${becaActiva ? "No puedes solicitar otra beca mientras mantengas una activa." : "Solo puedes tener una solicitud activa a la vez. Si es rechazada, podrás optar nuevamente."}</p></div>${!becaActiva && rows[0].estado === "rechazada" ? '<a class="boton-primario" href="#solicitar">Solicitar otra beca</a>' : ""}</div>
                 <div class="student-scholarship-grid">${rows.map(renderStudentCard).join("")}</div></section>`;
     } catch (error) {
         target.innerHTML = showMessage(error.message);
@@ -113,3 +117,4 @@ document.addEventListener("click", async (event) => {
     } catch (error) { feedback.innerHTML = showMessage(error.message); }
     finally { button.disabled = false; }
 });
+

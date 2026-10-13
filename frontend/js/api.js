@@ -92,7 +92,18 @@ export const api = {
     crearSolicitud(estudiante) {
         return request("/estudiante/solicitudes", { method: "POST", body: JSON.stringify({ estudiante }) });
     },
-    actualizarBorradorSolicitud(id, estudiante, parcial) {
+    crearBorrador(estudiante) {
+        return request("/estudiante/solicitudes/borradores", { method: "POST", body: JSON.stringify({ estudiante }) });
+    },
+    actualizarBorrador(id, estudiante, parcial = false) {
+        return request(`/estudiante/solicitudes/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({ estudiante, parcial })
+        });
+    },
+    actualizarBorradorSolicitud(id, estudiante, parcial = false) {
+        return this.actualizarBorrador(id, estudiante, parcial);
+    },
         return request(`/estudiante/solicitudes/${id}`, {
             method: "PUT",
             body: JSON.stringify({ estudiante, parcial })
@@ -158,3 +169,4 @@ export const api = {
         return request(`/documentos/${documentoId}`, { method: "DELETE" });
     }
 };
+
