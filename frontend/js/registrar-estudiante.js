@@ -96,12 +96,12 @@ export async function renderRegister(studentId = null, forStudent = false) {
     if (studentMode) {
         try {
             const profile = await api.perfilEstudiante();
-            cargarDatosEstudiante(profile);
             const applications = await api.misSolicitudes();
             const draft = applications.find((item) => item.estado === "borrador");
             if (draft) {
                 pendingApplicationId = draft.id;
                 documentosExistentes = draft.documentos || [];
+                cargarDatosEstudiante({ ...profile, ...(draft.datos || {}) });
                 const section = document.querySelector("#existing-documents-section");
                 if (section) {
                     section.hidden = false;
@@ -109,7 +109,7 @@ export async function renderRegister(studentId = null, forStudent = false) {
                     section.querySelector(":scope > p")?.replaceChildren("Puedes revisar y quitar archivos antes de enviar la solicitud.");
                 }
                 renderDocumentosExistentes();
-            }
+            } else cargarDatosEstudiante(profile);
             document.querySelector("#cedula").readOnly = true;
             document.querySelector("#correo").readOnly = true;
             setText("#register-title", "Nueva solicitud de beca");
@@ -159,6 +159,11 @@ export async function renderRegister(studentId = null, forStudent = false) {
 
     if (estudianteEnEdicionId) enlazarAccionesDocumentosExistentes();
     if (studentMode) {
+        const saveDraftButton = document.querySelector("#guardar-borrador");
+        if (saveDraftButton) {
+            saveDraftButton.hidden = false;
+            saveDraftButton.addEventListener("click", guardarBorrador);
+        }
         const uploadButton = document.querySelector("#subir-documentos-solicitud");
         if (uploadButton) {
             uploadButton.hidden = false;
@@ -205,6 +210,11 @@ function cargarDatosEstudiante(student) {
         if (element.name === "tiene_discapacidad") value = student.tiene_discapacidad ? "si" : "no";
         if (element.name === "nacionalidad" && !value) value = student.es_extranjero ? "extranjera" : "panamena";
         if (value !== null && value !== undefined) element.value = String(value);
+    }
+    const programFields = student.programa_campos || {};
+    for (const [field, value] of Object.entries(programFields)) {
+        const input = document.getElementById(field);
+        if (input && value !== null && value !== undefined) input.value = String(value);
     }
     document.querySelector("#universidad_id").value = student.universidad_id || "";
     actualizarSecciones();
@@ -717,12 +727,48 @@ async function prepararArchivosSolicitud(data, files) {
             section.querySelector(":scope > p")?.replaceChildren("Puedes revisar y quitar archivos antes de enviar la solicitud.");
         }
         enlazarAccionesDocumentosExistentes();
+    } else {
+        await api.actualizarBorrador(pendingApplicationId, data);
     }
     archivosPendientes = files;
     const result = await cargarArchivosPendientes();
     quitarArchivosYaSubidos(result.uploaded);
     await actualizarDocumentosDelBorrador();
     return result;
+}
+
+async function guardarBorrador() {
+    const message = document.querySelector("#register-message");
+    const button = document.querySelector("#guardar-borrador");
+    const data = recopilarDatos();
+    if (!data.programa_solicitado) {
+        message.innerHTML = showMessage("Selecciona un programa para guardar el borrador.");
+        return;
+    }
+    button.disabled = true;
+    try {
+        let draft;
+        if (pendingApplicationId) {
+            draft = await api.actualizarBorrador(pendingApplicationId, data, true);
+        } else {
+            draft = await api.crearBorrador(data);
+            pendingApplicationId = draft.id;
+            const section = document.querySelector("#existing-documents-section");
+            if (section) {
+                section.hidden = false;
+                section.querySelector("h3")?.replaceChildren("Archivos subidos a este borrador");
+                section.querySelector(":scope > p")?.replaceChildren("Puedes revisar y quitar archivos antes de enviar la solicitud.");
+            }
+            enlazarAccionesDocumentosExistentes();
+        }
+        documentosExistentes = draft.documentos || documentosExistentes;
+        renderDocumentosExistentes();
+        message.innerHTML = showMessage("Borrador guardado. Puedes volver más tarde y continuar.", "exito");
+    } catch (error) {
+        message.innerHTML = showMessage(error.message);
+    } finally {
+        button.disabled = false;
+    }
 }
 
 async function subirArchivosDelBorrador() {
@@ -868,3 +914,4 @@ async function handleRegister(event) {
         button.disabled = false;
     }
 }
+
