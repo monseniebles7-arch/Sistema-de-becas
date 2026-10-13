@@ -111,6 +111,24 @@
                     <label for="telefono">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" maxlength="20" autocomplete="tel">
                 </div>
+                <div class="grupo-campo">
+                    <label for="provincia">Provincia de residencia</label>
+                    <select id="provincia" name="provincia" required>
+                        <option value="">Seleccione una provincia</option>
+                        <option value="bocas_del_toro">Bocas del Toro</option>
+                        <option value="cocle">Coclé</option>
+                        <option value="colon">Colón</option>
+                        <option value="chiriqui">Chiriquí</option>
+                        <option value="darien">Darién</option>
+                        <option value="herrera">Herrera</option>
+                        <option value="los_santos">Los Santos</option>
+                        <option value="panama">Panamá</option>
+                        <option value="panama_oeste">Panamá Oeste</option>
+                        <option value="veraguas">Veraguas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fila-campos">
                 <div class="grupo-campo conditional" id="residencia-section" hidden>
                     <label for="anios_residencia">Años de residencia en Panamá</label>
                     <input type="number" id="anios_residencia" name="anios_residencia" min="0" max="120" step="1">
@@ -197,10 +215,10 @@
             <div class="fila-campos">
                 <div class="grupo-campo campo-autocompletar">
                     <label for="universidad_busqueda">Centro educativo</label>
-                    <input type="text" id="universidad_busqueda" name="centro_educativo" placeholder="Escriba el nombre de la escuela, colegio o universidad" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lista-sugerencias" required>
+                    <input type="text" id="universidad_busqueda" name="centro_educativo" placeholder="Seleccione una sugerencia o escriba el nombre del centro" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lista-sugerencias" required>
                     <input type="hidden" id="universidad_id" name="universidad_id">
                     <ul class="lista-sugerencias" id="lista-sugerencias" role="listbox"></ul>
-                    <small>Puede elegir una sugerencia o escribir el nombre completo de otro centro.</small>
+                    <small>Enfoca el campo para ver centros registrados o escribe para filtrar. Si no aparece, puedes escribir el nombre completo.</small>
                 </div>
                 <div class="grupo-campo">
                     <label for="tipo_centro">Tipo de centro</label>
@@ -399,4 +417,3 @@
         </div>
     </form>
 </div>
-

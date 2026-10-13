@@ -34,4 +34,4 @@ Abre `http://localhost:8000` en el navegador. La API debe estar activa en parale
 
 El inicio público ofrece registro e inicio de sesión compartido. El inicio de sesión envía al estudiante a `#portal-estudiante` y al administrador a su panel existente. El formulario estudiantil genera una solicitud por separado y conserva su historial.
 
-Para ejecutar esta versión, actualiza también el backend y aplica, en orden, `migrations/20260927_student_application.sql`, `migrations/20260930_student_portal.sql` y `migrations/20261013_application_constraints.sql`. Configura `frontend/config.js` para que `apiBaseUrl` apunte al backend activo.
+Para ejecutar esta versión, actualiza también el backend y aplica, en orden, `migrations/20260927_student_application.sql`, `migrations/20260930_student_portal.sql`, `migrations/20261013_application_constraints.sql` y `migrations/20261013_student_province_admin_email.sql`. Después de la última migración, registra el correo de cada administrador en la columna `administradores.correo` para habilitar ese método de acceso. Configura `frontend/config.js` para que `apiBaseUrl` apunte al backend activo.

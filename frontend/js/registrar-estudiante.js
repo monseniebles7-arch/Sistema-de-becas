@@ -147,6 +147,7 @@ export async function renderRegister(studentId = null, forStudent = false) {
     }
 
     busqueda.addEventListener("input", () => mostrarSugerencias(busqueda.value));
+    busqueda.addEventListener("focus", () => mostrarSugerencias(busqueda.value, true));
     lista.addEventListener("pointerdown", (event) => {
         const item = event.target.closest(".sugerencia-item");
         if (!item) return;
@@ -220,26 +221,28 @@ function cargarDatosEstudiante(student) {
     actualizarSecciones();
 }
 
-function mostrarSugerencias(texto) {
+function mostrarSugerencias(texto, mostrarTodos = false) {
     const lista = document.querySelector("#lista-sugerencias");
     document.querySelector("#universidad_id").value = "";
     const termino = texto.trim().toLocaleLowerCase();
-    if (!termino) {
+    if (!termino && !mostrarTodos) {
         cerrarSugerencias();
         return;
     }
 
-    const coincidencias = centrosEducativos.filter((centro) =>
-        centro.nombre.toLocaleLowerCase().includes(termino)
-    );
+    const coincidencias = termino
+        ? centrosEducativos.filter((centro) => centro.nombre.toLocaleLowerCase().includes(termino))
+        : centrosEducativos;
     if (coincidencias.length === 0) {
-        lista.innerHTML = "<li class=\"sugerencia-vacia\">Sin coincidencias; puede escribir el nombre del centro.</li>";
+        lista.innerHTML = centrosEducativos.length
+            ? "<li class=\"sugerencia-vacia\">Sin coincidencias; puede escribir el nombre completo.</li>"
+            : "<li class=\"sugerencia-vacia\">No hay centros cargados en el catálogo. Escriba el nombre completo del centro.</li>";
         actualizarEstadoSugerencias(true);
         return;
     }
 
     lista.innerHTML = coincidencias.map((centro) =>
-        `<li class="sugerencia-item" data-id="${escapeHtml(centro.id)}" data-nombre="${escapeHtml(centro.nombre)}" role="option">${escapeHtml(centro.nombre)}</li>`
+        `<li class="sugerencia-item" data-id="${escapeHtml(centro.id)}" data-nombre="${escapeHtml(centro.nombre)}" role="option">${escapeHtml(centro.nombre)}${centro.tipo ? `<small>${escapeHtml(centro.tipo === "publica" ? "Público" : "Privado")}</small>` : ""}</li>`
     ).join("");
     actualizarEstadoSugerencias(true);
 }
@@ -507,6 +510,7 @@ function actualizarSecciones() {
     setRequired("#tipo_identificacion", seleccionado);
     setRequired("#cedula", seleccionado);
     setRequired("#nacionalidad", seleccionado);
+    setRequired("#provincia", seleccionado);
     setRequired("#correo", seleccionado);
     setRequired("#telefono", seleccionado);
     setRequired("#nivel_educativo", seleccionado);
@@ -914,4 +918,3 @@ async function handleRegister(event) {
         button.disabled = false;
     }
 }
-

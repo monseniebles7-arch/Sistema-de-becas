@@ -2,6 +2,11 @@ import { api } from "./api.js";
 import { escapeHtml, showMessage } from "./ui.js";
 
 const labels = { borrador: "Borrador incompleto", en_revision: "En revisión", aprobada: "Aprobada", rechazada: "Rechazada", requiere_cambios: "Requiere cambios" };
+const provinceLabels = {
+    bocas_del_toro: "Bocas del Toro", cocle: "Coclé", colon: "Colón", chiriqui: "Chiriquí",
+    darien: "Darién", herrera: "Herrera", los_santos: "Los Santos", panama: "Panamá",
+    panama_oeste: "Panamá Oeste", veraguas: "Veraguas",
+};
 
 export async function renderStudentPortal(container, adminView = false) {
     const target = adminView ? container.querySelector("#admin-applications") : container;
@@ -76,6 +81,7 @@ export async function renderStudentProfile(container) {
         const fields = [
             ["Nombre completo", `${student.nombre || ""} ${student.apellido || ""}`.trim()],
             ["Cédula", student.cedula], ["Correo", student.correo], ["Teléfono", student.telefono],
+            ["Provincia de residencia", provinceLabels[student.provincia] || student.provincia],
             ["Fecha de nacimiento", student.fecha_nacimiento], ["Sexo", student.sexo],
             ["Centro educativo", student.centro_educativo || student.universidad],
             ["Nivel educativo", student.nivel_educativo], ["Carrera", student.carrera],
@@ -117,4 +123,3 @@ document.addEventListener("click", async (event) => {
     } catch (error) { feedback.innerHTML = showMessage(error.message); }
     finally { button.disabled = false; }
 });
-

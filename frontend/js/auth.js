@@ -17,7 +17,8 @@ async function handleLogin(event) {
 
     try {
         const formData = new FormData(form);
-        const session = await api.login(formData.get("usuario"), formData.get("contrasena"));
+        const identifier = formData.get("usuario").trim();
+        const session = await api.login(identifier, formData.get("contrasena"));
         window.location.hash = session.rol === "student" ? "#portal-estudiante" : "#inicio";
     } catch (error) {
         message.innerHTML = showMessage(error.message);

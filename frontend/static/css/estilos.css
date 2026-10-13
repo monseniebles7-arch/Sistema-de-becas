@@ -782,6 +782,13 @@ main > .mensaje-error,
     cursor: pointer;
 }
 
+.sugerencia-item small {
+    display: block;
+    margin-top: 3px;
+    color: #5A6472;
+    font-size: 0.75rem;
+}
+
 .sugerencia-item:hover {
     background-color: #EDF1F5;
     color: #0B3D66;

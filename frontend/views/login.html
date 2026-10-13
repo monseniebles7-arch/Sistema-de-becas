@@ -14,8 +14,9 @@
             <p class="subtitulo">Ingresa con tu cuenta.</p>
             <div id="login-message"></div>
             <form id="login-form">
-                <label for="usuario">Usuario administrativo o correo estudiantil</label>
-                <input type="text" id="usuario" name="usuario" autocomplete="username" required autofocus>
+                <label for="usuario">Usuario o correo electrónico</label>
+                <input type="text" id="usuario" name="usuario" autocomplete="username" placeholder="Usuario administrativo o correo de tu cuenta" required autofocus>
+                <small class="login-help">Administradores: usuario o correo registrado. Estudiantes: correo electrónico.</small>
                 <label for="contrasena">Contraseña</label>
                 <input type="password" id="contrasena" name="contrasena" required>
                 <button type="submit">Iniciar sesión</button>
