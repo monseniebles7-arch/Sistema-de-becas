@@ -89,7 +89,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="cedula">Número de identificación</label>
-                    <input type="text" id="cedula" name="cedula" maxlength="20" autocomplete="off" inputmode="numeric" placeholder="8-123-1234" required>
+                    <input type="text" id="cedula" name="cedula" maxlength="20" autocomplete="off" required>
                 </div>
             </div>
             <div class="fila-campos">
@@ -103,13 +103,13 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="correo">Correo electrónico</label>
-                    <input type="email" id="correo" name="correo" maxlength="150" autocomplete="email" required>
+                    <input type="email" id="correo" name="correo" maxlength="150" autocomplete="email">
                 </div>
             </div>
             <div class="fila-campos">
                 <div class="grupo-campo">
                     <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" maxlength="9" autocomplete="tel" inputmode="numeric" pattern="(?:[0-9]{8}|[0-9]{4}[- ][0-9]{4})" title="Ingrese un teléfono panameño de 8 dígitos, por ejemplo 61234567 o 6123-4567." required>
+                    <input type="tel" id="telefono" name="telefono" maxlength="20" autocomplete="tel">
                 </div>
                 <div class="grupo-campo conditional" id="residencia-section" hidden>
                     <label for="anios_residencia">Años de residencia en Panamá</label>
@@ -143,7 +143,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="representante_cedula">Cédula del representante</label>
-                    <input type="text" id="representante_cedula" name="representante_cedula" maxlength="11" inputmode="numeric" autocomplete="off" placeholder="8-123-1234">
+                    <input type="text" id="representante_cedula" name="representante_cedula" maxlength="20">
                 </div>
             </div>
             <div class="fila-campos">
@@ -153,7 +153,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="representante_telefono">Teléfono del representante</label>
-                    <input type="tel" id="representante_telefono" name="representante_telefono" maxlength="9" inputmode="numeric" pattern="(?:[0-9]{8}|[0-9]{4}[- ][0-9]{4})" title="Ingrese un teléfono panameño de 8 dígitos, por ejemplo 61234567 o 6123-4567.">
+                    <input type="tel" id="representante_telefono" name="representante_telefono" maxlength="20">
                 </div>
             </div>
             <div class="upload-card" data-upload-card="identificacion_representante">
@@ -204,7 +204,7 @@
                 </div>
                 <div class="grupo-campo">
                     <label for="tipo_centro">Tipo de centro</label>
-                    <select id="tipo_centro" name="tipo_centro" required>
+                    <select id="tipo_centro" name="tipo_centro">
                         <option value="">Seleccione</option>
                         <option value="publica">Público</option>
                         <option value="privada">Privado</option>
@@ -216,7 +216,7 @@
                     <label for="carrera">Carrera o programa de estudios</label>
                     <input type="text" id="carrera" name="carrera" maxlength="150">
                 </div>
-                <div class="grupo-campo" id="tipo-carrera-field">
+                <div class="grupo-campo">
                     <label for="tipo_carrera">Situación universitaria</label>
                     <select id="tipo_carrera" name="tipo_carrera">
                         <option value="">Seleccione</option>
@@ -391,7 +391,6 @@
         </section>
 
         <div class="acciones-formulario">
-            <button type="button" class="boton-secundario" id="subir-documentos-solicitud" hidden>Subir archivos seleccionados</button>
             <button type="submit" class="boton-primario" id="registrar-estudiante">Registrar estudiante y documentos</button>
             <a href="#estudiantes" class="boton-secundario">Cancelar</a>
         </div>
