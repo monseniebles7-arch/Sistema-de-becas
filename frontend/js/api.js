@@ -101,14 +101,6 @@ export const api = {
             body: JSON.stringify({ estudiante, parcial })
         });
     },
-    actualizarBorradorSolicitud(id, estudiante, parcial = false) {
-        return this.actualizarBorrador(id, estudiante, parcial);
-    },
-        return request(`/estudiante/solicitudes/${id}`, {
-            method: "PUT",
-            body: JSON.stringify({ estudiante, parcial })
-        });
-    },
     enviarSolicitud(id) { return request(`/estudiante/solicitudes/${id}/enviar`, { method: "POST", body: JSON.stringify({}) }); },
     subirDocumentoSolicitud(solicitudId, tipoDocumentoId, archivo) {
         const body = new FormData();
@@ -169,4 +161,3 @@ export const api = {
         return request(`/documentos/${documentoId}`, { method: "DELETE" });
     }
 };
-
