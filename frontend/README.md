@@ -16,13 +16,13 @@ La API debe permitir solicitudes CORS desde el origen donde se sirva este fronte
 
 ## Ejecución local
 
-Desde la raíz del proyecto:
+Desde la raíz del repositorio:
 
 ```powershell
-python -m http.server 8000 --directory frontend
+python -m http.server 8000
 ```
 
-Abre `http://localhost:8000` en el navegador. La API debe estar activa en paralelo.
+Abre `http://localhost:8000/` para ver las noticias y la información pública. El inicio de sesión está en `http://localhost:8000/login.html`; después de autenticarte, el portal se carga desde `frontend/index.html`. Si alguien abre `frontend/index.html#login`, será redirigido a `login.html`. La API debe estar activa en paralelo.
 
 ## Alcance actual
 

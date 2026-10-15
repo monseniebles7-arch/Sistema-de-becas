@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { renderLogin, renderActiveAdmin, renderRegistroCuenta } from "./auth.js";
+import { renderActiveAdmin, renderRegistroCuenta } from "./auth.js";
 import { renderHome } from "./inicio.js";
 import { renderStudents } from "./estudiantes.js";
 import { renderRegister } from "./registrar-estudiante.js";
@@ -91,7 +91,11 @@ function updatePanelNavigation(role, activeItem, view) {
 
 async function render(view = window.location.hash || "#publico") {
     if (!api.getToken()) {
-        if (view === "#login") return renderLogin(app);
+        if (view === "#login") {
+            // Use the standalone login page at the repository root as the only login entry point.
+            window.location.replace("/login.html");
+            return;
+        }
         if (view === "#registro") return renderRegistroCuenta(app);
         app.innerHTML = await loadView("views/publico.html");
         return;

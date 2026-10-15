@@ -1,31 +1,5 @@
 import { api } from "./api.js";
-import { escapeHtml, loadView, showMessage } from "./ui.js";
-
-export async function renderLogin(app) {
-    app.innerHTML = await loadView("views/login.html");
-    document.querySelector("#login-form").addEventListener("submit", handleLogin);
-}
-
-async function handleLogin(event) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const message = document.querySelector("#login-message");
-    const button = form.querySelector("button");
-    button.disabled = true;
-    button.textContent = "Ingresando...";
-    message.innerHTML = "";
-
-    try {
-        const formData = new FormData(form);
-        const identifier = formData.get("usuario").trim();
-        const session = await api.login(identifier, formData.get("contrasena"));
-        window.location.hash = session.rol === "student" ? "#portal-estudiante" : "#inicio";
-    } catch (error) {
-        message.innerHTML = showMessage(error.message);
-        button.disabled = false;
-        button.textContent = "Iniciar sesión";
-    }
-}
+import { loadView, showMessage } from "./ui.js";
 
 export function renderActiveAdmin() {
     const admin = api.getUser() || api.getAdmin();

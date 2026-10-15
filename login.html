@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Sistema de Inicio de Sesión del Sistema de Becas">
+
+    <title>Inicio de sesión | Sistema de Becas</title>
+
+    <link rel="stylesheet" href="frontend/static/css/app.css?v=20261014f">
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- PANEL IZQUIERDO -->
+        <section class="brand-panel" aria-label="Identidad institucional">
+
+            <!-- Fondo animado de burbujas -->
+            <div class="bubbles" aria-hidden="true">
+                <span class="bubble bubble-1"></span>
+                <span class="bubble bubble-2"></span>
+                <span class="bubble bubble-3"></span>
+                <span class="bubble bubble-4"></span>
+                <span class="bubble bubble-5"></span>
+                <span class="bubble bubble-6"></span>
+                <span class="bubble bubble-7"></span>
+                <span class="bubble bubble-8"></span>
+                <span class="bubble bubble-9"></span>
+                <span class="bubble bubble-10"></span>
+            </div>
+
+            <!-- Espacio para el logo del IFARHU -->
+            <div class="ifharu-logo-container">
+                <img
+                    src="assets/IFHARU.jpg"
+                    alt="Logo del IFARHU"
+                    class="ifharu-logo"
+                >
+            </div>
+
+            <div class="brand-footer">
+                <p>Sistema de Becas</p>
+                <span>Acceso seguro a la plataforma institucional</span>
+            </div>
+
+        </section>
+
+
+        <!-- PANEL DERECHO -->
+        <section class="form-panel" aria-label="Inicio de sesión">
+
+            <div class="login-content">
+
+                <!-- Encabezado institucional -->
+                <header class="form-header">
+
+                    <img
+                        src="assets/GNlogo.png"
+                        alt="Gobierno Nacional de Panamá, Con paso firme"
+                        class="government-logo"
+                    >
+
+                    <h1>Sistema de Inicio de Sesión</h1>
+
+                </header>
+
+
+                <!-- Formulario -->
+                <form id="login-form" action="#" method="post">
+
+                    <div class="form-group">
+
+                        <label for="identificador">Cédula o correo electrónico</label>
+
+                        <div class="input-wrapper">
+
+                            <svg
+                                class="input-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                aria-hidden="true"
+                            >
+                                <circle cx="12" cy="8" r="4"></circle>
+                                <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+                            </svg>
+
+                            <input
+                                type="text"
+                                id="identificador"
+                                name="usuario"
+                                placeholder="Cédula o correo electrónico"
+                                autocomplete="username"
+                                inputmode="text"
+                                maxlength="150"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="contrasena">Contraseña</label>
+
+                        <div class="input-wrapper">
+
+                            <svg
+                                class="input-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                aria-hidden="true"
+                            >
+                                <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+                                <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                            </svg>
+
+                            <input
+                                type="password"
+                                id="contrasena"
+                                name="contrasena"
+                                placeholder="Contraseña"
+                                autocomplete="current-password"
+                                maxlength="128"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Recordar sesión y recuperación -->
+                    <div class="form-options">
+
+                        <label class="remember-option">
+                            <input
+                                type="checkbox"
+                                id="recordar"
+                                name="recordar"
+                            >
+                            <span>Recordar contraseña</span>
+                        </label>
+
+                        <a href="#" id="forgot-password">
+                            ¿Olvidó su contraseña?
+                        </a>
+
+                    </div>
+
+
+                    <!-- Mensaje para errores de autenticación -->
+                    <p
+                        id="login-message"
+                        class="login-message"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+
+                    <button type="submit" id="login-button" class="login-button">
+                        Acceder
+                    </button>
+                    <div class="register-prompt">
+                        <p>¿Aún no tienes una cuenta?</p>
+                        <a href="frontend/index.html#registro" id="register-link">Regístrate para solicitar una beca</a>
+                    </div>
+
+                </form>
+
+
+                <footer class="form-footer">
+                    <p>© 2026 Sistema de Becas IFHARU</p>
+                </footer>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="js/login.js" defer></script>
+</body>
+</html>
