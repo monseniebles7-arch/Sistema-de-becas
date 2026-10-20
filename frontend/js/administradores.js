@@ -76,7 +76,7 @@ function renderAdmins(target, admins) {
     }
     target.innerHTML = `<div class="admin-account-list">${admins.map((admin) => `
         <article class="admin-account-item">
-            <div><strong>${escapeHtml(admin.nombre_completo || admin.usuario)}</strong><span>${escapeHtml(admin.correo || "Sin correo")}</span></div>
-            <div><strong>${admin.rol === "senior" ? "Administrador Senior" : "Administrador Junior"}</strong><span>${escapeHtml(admin.centro_atencion || "Sin centro asignado")} · ${admin.alcance === "provincia" ? "Toda la provincia" : "Solo este centro"}</span></div>
+            <div class="admin-account-person"><strong>${escapeHtml(admin.nombre_completo || admin.usuario)}</strong><span>${escapeHtml(admin.correo || "Sin correo registrado")}</span></div>
+            <div class="admin-account-details"><span class="admin-role-badge ${admin.rol === "senior" ? "is-senior" : "is-junior"}">${admin.rol === "senior" ? "Administrador Senior" : "Administrador Junior"}</span><span class="admin-account-center">${escapeHtml(admin.centro_atencion || "Sin centro asignado")}</span><span class="admin-account-scope">${admin.alcance === "provincia" ? "Acceso a toda la provincia" : "Acceso a este centro"}</span></div>
         </article>`).join("")}</div>`;
 }
