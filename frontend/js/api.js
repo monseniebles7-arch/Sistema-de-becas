@@ -22,7 +22,7 @@ function saveSession(data) {
     const user = data.usuario || data.administrador;
     sessionStorage.setItem(USER_KEY, JSON.stringify(user));
     sessionStorage.setItem(ROLE_KEY, data.rol || "admin");
-    if (data.rol === "admin") sessionStorage.setItem(ADMIN_KEY, JSON.stringify(user));
+    if (data.rol?.startsWith("admin_")) sessionStorage.setItem(ADMIN_KEY, JSON.stringify(user));
 }
 
 function clearSession() {
@@ -86,6 +86,40 @@ export const api = {
     },
     registrarCuentaEstudiante(datos) {
         return request("/auth/registro-estudiante", { method: "POST", body: JSON.stringify(datos) });
+    },
+    listarCentrosAtencion() { return request("/centros-atencion"); },
+    listarAdministradores() { return request("/administradores"); },
+    crearAdministrador(datos) {
+        return request("/administradores", { method: "POST", body: JSON.stringify(datos) });
+    },
+    verificarDocumento(id) {
+        return request(`/documentos/${id}/estado`, { method: "PATCH", body: JSON.stringify({ estado: "verificado" }) });
+    },
+    async abrirDocumento(id) {
+        const tab = window.open("about:blank", "_blank");
+        try {
+            const response = await fetch(`${window.APP_CONFIG.apiBaseUrl}/documentos/${id}/archivo`, {
+                headers: { Authorization: `Bearer ${getToken()}` },
+            });
+            if (!response.ok) {
+                let data = null;
+                try { data = await response.json(); } catch { /* respuesta sin JSON */ }
+                throw new Error(data?.error || "No se pudo abrir el archivo.");
+            }
+            const objectUrl = URL.createObjectURL(await response.blob());
+            if (tab) tab.location = objectUrl;
+            else {
+                const link = document.createElement("a");
+                link.href = objectUrl;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.click();
+            }
+            setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+        } catch (error) {
+            tab?.close();
+            throw error;
+        }
     },
     perfilEstudiante() { return request("/estudiante/perfil"); },
     misSolicitudes() { return request("/estudiante/solicitudes"); },

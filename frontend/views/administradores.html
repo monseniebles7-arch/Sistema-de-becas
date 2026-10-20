@@ -1,0 +1,28 @@
+<div class="encabezado-pagina">
+    <h2>Administradores</h2>
+    <p>Solo un administrador Senior puede crear otras cuentas administrativas y asignarles un ámbito de atención.</p>
+</div>
+<div id="admin-management-message" aria-live="polite"></div>
+<div class="tarjeta-formulario">
+    <form id="admin-create-form" novalidate>
+        <h3>Registrar administrador</h3>
+        <div class="fila-campos">
+            <div class="grupo-campo"><label for="admin-full-name">Nombre completo</label><input id="admin-full-name" name="nombre_completo" maxlength="150" required></div>
+            <div class="grupo-campo"><label for="admin-username">Usuario</label><input id="admin-username" name="usuario" minlength="3" maxlength="50" pattern="[A-Za-z0-9_.-]+" autocomplete="username" required></div>
+        </div>
+        <div class="fila-campos">
+            <div class="grupo-campo"><label for="admin-email">Correo</label><input id="admin-email" name="correo" type="email" maxlength="150" autocomplete="email" required></div>
+            <div class="grupo-campo"><label for="admin-password">Contraseña temporal</label><input id="admin-password" name="contrasena" type="password" minlength="12" autocomplete="new-password" required><small>Mínimo 12 caracteres. Debe entregarse al administrador por un canal seguro.</small></div>
+        </div>
+        <div class="fila-campos">
+            <div class="grupo-campo"><label for="admin-role">Rol</label><select id="admin-role" name="rol" required><option value="junior">Administrador Junior</option><option value="senior">Administrador Senior</option></select></div>
+            <div class="grupo-campo"><label for="admin-office">Centro de atención asignado</label><select id="admin-office" name="centro_atencion_id" required><option value="">Cargando centros...</option></select></div>
+        </div>
+        <div class="grupo-campo"><label for="admin-scope">Alcance de acceso</label><select id="admin-scope" name="alcance" required><option value="centro">Solo el centro asignado</option><option value="provincia">Todos los centros de su provincia</option></select></div>
+        <button type="submit" class="boton-primario">Crear administrador</button>
+    </form>
+</div>
+<section class="tarjeta-formulario">
+    <h3>Cuentas administrativas</h3>
+    <div id="admin-accounts-list" aria-live="polite">Cargando administradores...</div>
+</section>

@@ -11,6 +11,10 @@ export function renderActiveAdmin() {
         if (sidebarName) sidebarName.textContent = [admin?.nombre, admin?.apellido].filter(Boolean).join(" ") || admin?.correo || "Estudiante";
         const adminName = document.querySelector("#admin-sidebar-name");
         if (adminName) adminName.textContent = nombre;
+        const roleLabel = document.querySelector("#admin-sidebar-role");
+        if (roleLabel) roleLabel.textContent = api.getRole() === "admin_senior" ? "Administrador Senior" : "Administrador Junior";
+        const managerLink = document.querySelector("#admin-managers-link");
+        if (managerLink) managerLink.hidden = api.getRole() !== "admin_senior";
         const initials = document.querySelector("#panel-user-initials");
         if (initials) {
             const parts = nombre.trim().split(/\s+/).filter(Boolean);
@@ -21,11 +25,31 @@ export function renderActiveAdmin() {
 
 export async function renderRegistroCuenta(app) {
     app.innerHTML = await loadView("views/registro-cuenta.html");
-    document.querySelector("#account-form").addEventListener("submit", async (event) => {
+    const form = document.querySelector("#account-form");
+    const message = document.querySelector("#account-message");
+    const centerSelect = document.querySelector("#centro-atencion-cuenta");
+    try {
+        const centers = await api.listarCentrosAtencion();
+        centerSelect.replaceChildren(new Option("Seleccione su centro IFARHU", ""));
+        const provinceNames = provinceLabels();
+        const groups = new Map();
+        for (const center of centers) {
+            if (!groups.has(center.provincia)) {
+                const group = document.createElement("optgroup");
+                group.label = provinceNames[center.provincia] || center.provincia;
+                groups.set(center.provincia, group);
+                centerSelect.append(group);
+            }
+            groups.get(center.provincia).append(new Option(center.nombre, String(center.id)));
+        }
+    } catch (error) {
+        centerSelect.replaceChildren(new Option("No se pudieron cargar los centros", ""));
+        message.innerHTML = showMessage(`No se pudo cargar el catálogo de centros de atención: ${error.message}`);
+    }
+
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const form = event.currentTarget;
         const data = Object.fromEntries(new FormData(form));
-        const message = document.querySelector("#account-message");
         if (!/^[\p{L}]+(?:[ '\u2019-][\p{L}]+)*$/u.test(data.nombre.trim())
             || !/^[\p{L}]+(?:[ '\u2019-][\p{L}]+)*$/u.test(data.apellido.trim())) {
             message.innerHTML = showMessage("Nombre y apellido solo pueden contener letras, espacios, apóstrofes y guiones.");
@@ -43,6 +67,7 @@ export async function renderRegistroCuenta(app) {
             message.innerHTML = showMessage("Las contraseñas no coinciden.");
             return;
         }
+        data.centro_atencion_id = Number(data.centro_atencion_id);
         delete data.confirmar_contrasena;
         const button = form.querySelector("button[type=submit]");
         button.disabled = true;
@@ -56,6 +81,15 @@ export async function renderRegistroCuenta(app) {
             button.disabled = false;
         }
     });
+}
+
+function provinceLabels() {
+    return {
+        bocas_del_toro: "Bocas del Toro", cocle: "Coclé", colon: "Colón", chiriqui: "Chiriquí",
+        darien: "Darién", herrera: "Herrera", los_santos: "Los Santos", panama: "Panamá",
+        panama_oeste: "Panamá Oeste", veraguas: "Veraguas", guna_yala: "Guna Yala",
+        embera_wounaan: "Emberá-Wounaan", ngabe_bugle: "Ngäbe-Buglé",
+    };
 }
 
 function esCedulaPanamena(value) {

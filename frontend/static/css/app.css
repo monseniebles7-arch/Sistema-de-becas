@@ -1557,6 +1557,22 @@ body {
     min-height: 100vh;
 }
 
+.application-document-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 14px;
+    padding: 0;
+    list-style: none;
+}
+
+.application-document-list li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
 
 /* =========================
    PANEL IZQUIERDO

@@ -4,6 +4,7 @@ import { renderHome } from "./inicio.js";
 import { renderStudents } from "./estudiantes.js";
 import { renderRegister } from "./registrar-estudiante.js";
 import { renderStudentPortal, renderStudentProfile } from "./portal-estudiante.js";
+import { renderAdministradores } from "./administradores.js";
 import { loadView, showMessage } from "./ui.js";
 
 const app = document.querySelector("#app");
@@ -37,7 +38,7 @@ async function renderPrivateView(view, role) {
                 return;
             }
             const latest = applications[0];
-            if (latest && !["rechazada", "borrador"].includes(latest.estado)) {
+            if (latest && !["rechazada", "borrador", "requiere_cambios"].includes(latest.estado)) {
                 content.innerHTML = '<div class="student-welcome"><h2>Tu solicitud está en proceso</h2><p>Solo puedes mantener una solicitud activa a la vez. Si el IFARHU la rechaza, podrás presentar otra solicitud.</p></div>';
                 await renderStudentPortal(content);
                 return;
@@ -54,7 +55,8 @@ async function renderPrivateView(view, role) {
     }
     const adminNav = view === "#estudiantes" ? "students"
         : view === "#registrar" || view.startsWith("#editar-estudiante/") ? "register"
-        : view === "#solicitudes" ? "applications" : "home";
+        : view === "#solicitudes" ? "applications"
+        : view === "#administradores" ? "administrators" : "home";
     updatePanelNavigation("admin", adminNav, view);
     const editMatch = view.match(/^#editar-estudiante\/(\d+)$/);
     if (view === "#registrar" || editMatch) {
@@ -66,6 +68,9 @@ async function renderPrivateView(view, role) {
     } else if (view === "#solicitudes") {
         content.innerHTML = '<h2>Solicitudes de beca</h2><div id="admin-applications">Cargando solicitudes…</div>';
         await renderStudentPortal(content, true);
+    } else if (view === "#administradores" && role === "admin_senior") {
+        content.innerHTML = await loadView("views/administradores.html");
+        await renderAdministradores(content);
     } else {
         content.innerHTML = await loadView("views/inicio.html");
         await renderHome();
@@ -84,7 +89,7 @@ function updatePanelNavigation(role, activeItem, view) {
     if (title) {
         const titles = role === "student"
             ? { home: "Inicio", profile: "Mi perfil", apply: "Solicitar beca" }
-            : { home: "Resumen", students: "Estudiantes", register: "Registrar estudiante", applications: "Solicitudes" };
+            : { home: "Resumen", students: "Estudiantes", register: "Registrar estudiante", applications: "Solicitudes", administrators: "Administradores" };
         title.textContent = view.startsWith("#editar-estudiante/") ? "Actualizar estudiante" : titles[activeItem];
     }
 }
@@ -102,7 +107,7 @@ async function render(view = window.location.hash || "#publico") {
     }
     const role = api.getRole();
     const allowed = role === "student" ? ["#portal-estudiante", "#perfil-estudiante", "#solicitar"]
-        : ["#inicio", "#estudiantes", "#registrar", "#solicitudes"];
+        : ["#inicio", "#estudiantes", "#registrar", "#solicitudes", ...(role === "admin_senior" ? ["#administradores"] : [])];
     if (!allowed.includes(view) && !/^#editar-estudiante\/\d+$/.test(view)) {
         view = role === "student" ? "#portal-estudiante" : "#inicio";
         window.history.replaceState(null, "", view);
@@ -114,7 +119,7 @@ app.addEventListener("click", (event) => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
     const view = link.getAttribute("href");
-    if (!["#publico", "#login", "#registro", "#inicio", "#estudiantes", "#registrar", "#solicitudes", "#portal-estudiante", "#perfil-estudiante", "#solicitar"].includes(view)
+    if (!["#publico", "#login", "#registro", "#inicio", "#estudiantes", "#registrar", "#solicitudes", "#administradores", "#portal-estudiante", "#perfil-estudiante", "#solicitar"].includes(view)
         && !/^#editar-estudiante\/\d+$/.test(view)) return;
     event.preventDefault();
     navigate(view);

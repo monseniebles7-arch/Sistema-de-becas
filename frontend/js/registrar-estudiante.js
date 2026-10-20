@@ -41,6 +41,7 @@ const DOCUMENT_TYPES = {
 };
 
 let centrosEducativos = [];
+let centrosAtencion = [];
 let tiposDocumento = [];
 let programasBeca = [];
 let estudiantePendienteId = null;
@@ -80,12 +81,14 @@ export async function renderRegister(studentId = null, forStudent = false) {
     hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
     nacimiento.max = hoy.toISOString().slice(0, 10);
     try {
-        [centrosEducativos, tiposDocumento, programasBeca] = await Promise.all([
+        [centrosEducativos, tiposDocumento, programasBeca, centrosAtencion] = await Promise.all([
             api.listarUniversidades(),
             api.listarTiposDocumento(),
             api.listarProgramasBeca(),
+            api.listarCentrosAtencion(),
         ]);
         renderProgramasBeca();
+        renderCentrosAtencion();
     } catch (error) {
         document.querySelector("#register-message").innerHTML = showMessage(
             `No se pudieron cargar los centros, tipos de documento o programas de beca: ${error.message}`
@@ -97,7 +100,7 @@ export async function renderRegister(studentId = null, forStudent = false) {
         try {
             const profile = await api.perfilEstudiante();
             const applications = await api.misSolicitudes();
-            const draft = applications.find((item) => item.estado === "borrador");
+            const draft = applications.find((item) => ["borrador", "requiere_cambios"].includes(item.estado));
             if (draft) {
                 pendingApplicationId = draft.id;
                 documentosExistentes = draft.documentos || [];
@@ -105,11 +108,16 @@ export async function renderRegister(studentId = null, forStudent = false) {
                 const section = document.querySelector("#existing-documents-section");
                 if (section) {
                     section.hidden = false;
-                    section.querySelector("h3")?.replaceChildren("Archivos subidos a este borrador");
-                    section.querySelector(":scope > p")?.replaceChildren("Puedes revisar y quitar archivos antes de enviar la solicitud.");
+                    section.querySelector("h3")?.replaceChildren(draft.estado === "requiere_cambios" ? "Documentos de la solicitud devuelta" : "Archivos subidos a este borrador");
+                    section.querySelector(":scope > p")?.replaceChildren("Puedes actualizar la información, reemplazar o quitar archivos y volver a enviar la solicitud.");
                 }
                 renderDocumentosExistentes();
             } else cargarDatosEstudiante(profile);
+            if (profile.centro_atencion_id) {
+                const officeSelect = document.querySelector("#centro_atencion_id");
+                officeSelect.value = String(profile.centro_atencion_id);
+                officeSelect.disabled = true;
+            }
             document.querySelector("#cedula").readOnly = true;
             document.querySelector("#correo").readOnly = true;
             setText("#register-title", "Nueva solicitud de beca");
@@ -179,6 +187,35 @@ export async function renderRegister(studentId = null, forStudent = false) {
     });
     form.addEventListener("submit", handleRegister);
     actualizarSecciones();
+}
+
+function renderCentrosAtencion() {
+    const select = document.querySelector("#centro_atencion_id");
+    const selected = select.value;
+    const admin = api.getUser();
+    const assignedCenters = api.getRole().startsWith("admin_")
+        ? centrosAtencion.filter((center) => admin?.alcance === "provincia"
+            ? center.provincia === admin.provincia
+            : center.id === admin?.centro_atencion_id)
+        : centrosAtencion;
+    const labels = {
+        bocas_del_toro: "Bocas del Toro", cocle: "Coclé", colon: "Colón", chiriqui: "Chiriquí",
+        darien: "Darién", herrera: "Herrera", los_santos: "Los Santos", panama: "Panamá",
+        panama_oeste: "Panamá Oeste", veraguas: "Veraguas", guna_yala: "Guna Yala",
+        embera_wounaan: "Emberá-Wounaan", ngabe_bugle: "Ngäbe-Buglé",
+    };
+    select.replaceChildren(new Option("Seleccione su centro IFARHU", ""));
+    const groups = new Map();
+    for (const center of assignedCenters) {
+        if (!groups.has(center.provincia)) {
+            const group = document.createElement("optgroup");
+            group.label = labels[center.provincia] || center.provincia;
+            groups.set(center.provincia, group);
+            select.append(group);
+        }
+        groups.get(center.provincia).append(new Option(center.nombre, String(center.id)));
+    }
+    if (selected) select.value = selected;
 }
 
 function renderProgramasBeca() {
@@ -511,6 +548,7 @@ function actualizarSecciones() {
     setRequired("#cedula", seleccionado);
     setRequired("#nacionalidad", seleccionado);
     setRequired("#provincia", seleccionado);
+    setRequired("#centro_atencion_id", seleccionado);
     setRequired("#correo", seleccionado);
     setRequired("#telefono", seleccionado);
     setRequired("#nivel_educativo", seleccionado);
@@ -623,6 +661,8 @@ function recopilarDatos() {
     const data = Object.fromEntries(new FormData(form));
     delete data.universidad_busqueda;
     data.universidad_id = data.universidad_id ? Number(data.universidad_id) : null;
+    const officeSelect = document.querySelector("#centro_atencion_id");
+    data.centro_atencion_id = officeSelect?.value ? Number(officeSelect.value) : null;
     data.es_extranjero = data.nacionalidad === "extranjera";
     data.tiene_discapacidad = data.tiene_discapacidad === "si";
     data.tipo_cuenta_bancaria = data.tipo_cuenta || null;
