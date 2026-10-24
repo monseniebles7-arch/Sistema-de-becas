@@ -23,6 +23,22 @@
     </form>
 </div>
 <section class="tarjeta-formulario admin-accounts-card">
+    <div class="admin-accounts-heading"><div><h3>Disponibilidad y vacaciones</h3><p>Programa ausencias de los revisores. Al comenzar, sus solicitudes abiertas pasan automáticamente a la persona elegible con menor carga.</p></div></div>
+    <div id="admin-availability-message" aria-live="polite"></div>
+    <form id="admin-vacation-form" class="vacation-form" novalidate>
+        <div class="fila-campos">
+            <div class="grupo-campo"><label for="vacation-reviewer">Revisor</label><select id="vacation-reviewer" name="administrador_id" required><option value="">Cargando revisores...</option></select></div>
+            <div class="grupo-campo"><label for="vacation-reason">Motivo (opcional)</label><input id="vacation-reason" name="motivo" maxlength="500" placeholder="Vacaciones"></div>
+        </div>
+        <div class="fila-campos">
+            <div class="grupo-campo"><label for="vacation-start">Desde</label><input id="vacation-start" name="fecha_inicio" type="date" required></div>
+            <div class="grupo-campo"><label for="vacation-end">Hasta</label><input id="vacation-end" name="fecha_fin" type="date" required></div>
+        </div>
+        <button type="submit" class="boton-primario">Programar vacaciones</button>
+    </form>
+    <div id="admin-absences-list" aria-live="polite">Cargando ausencias...</div>
+</section>
+<section class="tarjeta-formulario admin-accounts-card">
     <div class="admin-accounts-heading">
         <div><h3>Cuentas administrativas</h3><p>Administradores registrados y su ámbito de atención.</p></div>
     </div>

@@ -89,6 +89,17 @@ export const api = {
     },
     listarCentrosAtencion() { return request("/centros-atencion"); },
     listarAdministradores() { return request("/administradores"); },
+    miDisponibilidad() { return request("/administradores/mi-disponibilidad"); },
+    listarAusencias() { return request("/administradores/ausencias"); },
+    programarVacaciones(id, datos) {
+        return request(`/administradores/${id}/vacaciones`, { method: "POST", body: JSON.stringify(datos) });
+    },
+    cancelarVacaciones(id) {
+        return request(`/administradores/ausencias/${id}/cancelar`, { method: "PATCH", body: JSON.stringify({}) });
+    },
+    actualizarEstadoAdministrador(id, activo) {
+        return request(`/administradores/${id}/activo`, { method: "PATCH", body: JSON.stringify({ activo }) });
+    },
     crearAdministrador(datos) {
         return request("/administradores", { method: "POST", body: JSON.stringify(datos) });
     },

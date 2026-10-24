@@ -16,7 +16,24 @@ function navigate(view) {
 
 async function renderShell(role) {
     app.innerHTML = await loadView(role === "student" ? "views/shell-estudiante.html" : "views/shell.html");
+    app.classList.remove("is-vacation-readonly");
     renderActiveAdmin();
+    if (role !== "student") {
+        const banner = document.querySelector("#availability-banner");
+        try {
+            const availability = await api.miDisponibilidad();
+            if (availability.acceso_limitado) {
+                app.classList.add("is-vacation-readonly");
+                banner.textContent = availability.mensaje;
+                banner.hidden = false;
+            }
+        } catch (error) {
+            if (error.status === 403) {
+                banner.textContent = error.message;
+                banner.hidden = false;
+            }
+        }
+    }
     document.querySelector("#logout-button").addEventListener("click", () => {
         api.clearSession();
         navigate("#publico");

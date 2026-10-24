@@ -96,7 +96,8 @@ function renderAdminCard(row) {
     const student = row.estudiante || {};
     const role = api.getRole();
     const currentAdminId = Number(api.getUser()?.id);
-    const canReview = role === "admin_junior" && row.estado === "en_revision";
+    const canReview = role === "admin_junior" && row.estado === "en_revision"
+        && Number(row.junior_asignado_id) === currentAdminId;
     const canDecide = role === "admin_senior" && row.estado === "pendiente_aprobacion"
         && Number(row.senior_asignado_id) === currentAdminId;
     const documentList = (row.documentos || []).map((doc) => `<li><button type="button" class="boton-secundario open-application-document" data-document-id="${Number(doc.id)}">${escapeHtml(doc.tipo_documento)}</button>${canReview ? doc.estado === "verificado" ? '<span class="application-status">Verificado</span>' : `<button type="button" class="boton-info verify-application-document" data-document-id="${Number(doc.id)}">Marcar verificado</button>` : doc.estado === "verificado" ? '<span class="application-status">Verificado</span>' : ""}</li>`).join("");
@@ -110,6 +111,7 @@ function renderAdminCard(row) {
     return `<article class="application-card" data-app="${Number(row.id)}"><div><h3>Solicitud #${Number(row.id)} · ${escapeHtml(labelProgram(row.programa_solicitado))}</h3>
         <p><strong>${escapeHtml(student.nombre || "")} ${escapeHtml(student.apellido || "")}</strong> · ${escapeHtml(student.cedula || "")}</p>
         <p>${escapeHtml(student.correo || "")} · Presentada: ${escapeHtml(row.fecha_solicitud || "")}</p>
+        ${row.estado === "en_revision" ? `<p><strong>Junior asignado:</strong> ${row.junior_asignado ? escapeHtml(row.junior_asignado.nombre_completo || row.junior_asignado.usuario) : "Sin revisor elegible; solicita apoyo a un Senior."}</p>` : ""}
         ${row.estado === "pendiente_aprobacion" ? `<p><strong>Senior asignado:</strong> ${row.senior_asignado ? escapeHtml(row.senior_asignado.nombre_completo || row.senior_asignado.usuario) : "Sin asignación disponible. Actualiza el backend y vuelve a cargar la página."}</p>` : ""}
         <p><strong>Centro:</strong> ${escapeHtml(student.centro_atencion || "Sin centro asignado")}</p>
         <div><strong>Documentos:</strong>${documentList ? `<ul class="application-document-list">${documentList}</ul>` : " ninguno"}</div>

@@ -2308,3 +2308,18 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.availability-banner{margin:18px 0;padding:14px 18px;border:1px solid #e2b84b;border-radius:10px;background:#fff4d2;color:#684d00;font-weight:700}
+.availability-banner[hidden]{display:none}
+.admin-availability-badge{display:inline-block;width:max-content;padding:5px 10px;border-radius:18px;font-size:.86rem;font-weight:700}
+.admin-availability-badge.is-active{background:#e3f5eb;color:#17633b}
+.admin-availability-badge.is-away{background:#fff2cc;color:#725500}
+.admin-availability-badge.is-inactive{background:#fde8e8;color:#9c1d27}
+.admin-account-details button{width:max-content}
+.vacation-form{display:grid;gap:14px;margin:14px 0 24px}
+.vacation-item{align-items:center}
+#app.is-vacation-readonly #view-content form,
+#app.is-vacation-readonly #view-content .save-application,
+#app.is-vacation-readonly #view-content .verify-application-document,
+#app.is-vacation-readonly #view-content [data-account-toggle],
+#app.is-vacation-readonly #view-content [data-cancel-absence]{display:none}
