@@ -12,9 +12,25 @@ const provinceLabels = {
 export async function renderStudentPortal(container, adminView = false) {
     const target = adminView ? container.querySelector("#admin-applications") : container;
     try {
-        const [rows, profile] = adminView
-            ? [await api.listarSolicitudesAdmin(), null]
-            : await Promise.all([api.misSolicitudes(), api.perfilEstudiante()]);
+        let rows;
+        let profile = null;
+        if (adminView && api.getRole() === "admin_senior") {
+            const [applications, juniorTasks] = await Promise.all([
+                api.listarSolicitudesAdmin(),
+                api.listarTrabajoJunior(),
+            ]);
+            const taskById = new Map(juniorTasks.map((task) => [Number(task.id), task]));
+            rows = applications.map((row) => {
+                const juniorTask = taskById.get(Number(row.id));
+                return juniorTask
+                    ? { ...row, revisores_disponibles: juniorTask.revisores_disponibles }
+                    : row;
+            });
+        } else if (adminView) {
+            rows = await api.listarSolicitudesAdmin();
+        } else {
+            [rows, profile] = await Promise.all([api.misSolicitudes(), api.perfilEstudiante()]);
+        }
         const becaActiva = Boolean(profile?.beca_activa);
         if (!rows.length) {
             target.innerHTML = adminView ? "<p>No hay solicitudes registradas.</p>" : `
@@ -89,6 +105,15 @@ export async function renderStudentProfile(container) {
             ["Nivel educativo", student.nivel_educativo], ["Carrera", student.carrera],
         ];
         container.innerHTML = `<section class="student-welcome"><div><p class="student-kicker">Datos personales</p><h2>Mi perfil</h2><p>Información asociada a tu cuenta estudiantil.</p></div></section><div class="student-profile-grid">${fields.map(([label, value]) => `<article><span>${escapeHtml(label)}</span><strong>${escapeHtml(value || "No registrado")}</strong></article>`).join("")}</div>`;
+        const [account, payments] = await Promise.all([api.cuentaBancariaEstudiante(), api.pagosEstudiante()]);
+        container.insertAdjacentHTML("beforeend", `<section class="student-account-section"><h2>Cuenta bancaria</h2><p>Esta informacion se usa en la simulacion academica de pagos.</p><p>Cuenta activa: ${account ? `${escapeHtml(account.banco)} / ${escapeHtml(account.tipo_cuenta)} / ${escapeHtml(account.numero_mascara)}` : "Sin registrar"}</p><form id="student-bank-account-form" class="student-bank-form"><label>Banco<input name="banco" maxlength="100" required></label><label>Tipo de cuenta<select name="tipo_cuenta" required><option value="">Selecciona</option><option value="ahorro">Ahorro</option><option value="corriente">Corriente</option><option value="otro">Otro</option></select></label><label>Numero de cuenta<input name="numero_cuenta" maxlength="50" autocomplete="off" required></label><label>Titular<input name="titular" maxlength="150" required></label><button class="boton-primario">Guardar cuenta</button><span id="bank-account-feedback" aria-live="polite"></span></form><h3>Historial de pagos</h3>${payments.length ? payments.map((payment) => `<article class="payment-card"><div><strong>${escapeHtml(payment.tipo_beca || "Beca")}</strong><p>${escapeHtml(payment.periodo || "Sin periodo")} / $${escapeHtml(payment.monto)} / ${escapeHtml(payment.fecha_pago)}</p><p>Estado: ${escapeHtml(payment.estado)}</p>${payment.referencia_simulacion ? `<p>Referencia: ${escapeHtml(payment.referencia_simulacion)}</p>` : ""}${payment.historial?.length ? `<details class="payment-timeline"><summary>Ver trazabilidad (${payment.historial.length})</summary><ol>${payment.historial.map((event) => `<li>${escapeHtml(event.fecha_evento || "")} - ${escapeHtml(event.estado_anterior || "Inicio")} - ${escapeHtml(event.estado_nuevo)}${event.nota ? ` - ${escapeHtml(event.nota)}` : ""}</li>`).join("")}</ol></details>` : ""}</div></article>`).join("") : "<p>Aun no hay pagos registrados.</p>"}</section>`);
+        const bankForm = container.querySelector("#student-bank-account-form");
+        bankForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const button = bankForm.querySelector("button"); button.disabled = true;
+            try { await api.guardarCuentaBancariaEstudiante(Object.fromEntries(new FormData(bankForm))); await renderStudentProfile(container); }
+            catch (error) { container.querySelector("#bank-account-feedback").innerHTML = showMessage(error.message); button.disabled = false; }
+        });
     } catch (error) { container.innerHTML = showMessage(error.message); }
 }
 
@@ -100,6 +125,13 @@ function renderAdminCard(row) {
         && Number(row.junior_asignado_id) === currentAdminId;
     const canDecide = role === "admin_senior" && row.estado === "pendiente_aprobacion"
         && Number(row.senior_asignado_id) === currentAdminId;
+    const canReassignJunior = role === "admin_senior" && row.estado === "en_revision";
+    const replacementReviewers = row.revisores_disponibles || [];
+    const replacementOptions = replacementReviewers.map((reviewer) =>
+        '<option value="' + Number(reviewer.id) + '">' +
+        escapeHtml(reviewer.nombre_completo || reviewer.usuario) +
+        " &middot; " + Number(reviewer.carga_abierta || 0) + " solicitudes abiertas</option>"
+    ).join("");
     const documentList = (row.documentos || []).map((doc) => `<li><button type="button" class="boton-secundario open-application-document" data-document-id="${Number(doc.id)}">${escapeHtml(doc.tipo_documento)}</button>${canReview ? doc.estado === "verificado" ? '<span class="application-status">Verificado</span>' : `<button type="button" class="boton-info verify-application-document" data-document-id="${Number(doc.id)}">Marcar verificado</button>` : doc.estado === "verificado" ? '<span class="application-status">Verificado</span>' : ""}</li>`).join("");
     const controls = canReview ? `<label>Resultado de revisión <select class="application-state"><option value="en_revision">Mantener en revisión</option><option value="requiere_cambios">Devolver al estudiante para correcciones</option><option value="pendiente_aprobacion">Enviar al Admin Senior</option></select></label>
         <label>Observaciones <textarea class="application-notes" rows="2">${escapeHtml(row.observaciones_admin || "")}</textarea></label>
@@ -107,7 +139,17 @@ function renderAdminCard(row) {
         : canDecide ? `<label>Decisión del Admin Senior <select class="application-state"><option value="">Seleccione una decisión</option><option value="aprobada">Aprobar beca</option><option value="rechazada">Rechazar solicitud</option></select></label>
         <label>Observaciones <textarea class="application-notes" rows="2">${escapeHtml(row.observaciones_admin || "")}</textarea></label>
         <button type="button" class="boton-primario save-application">Registrar decisión</button>`
-        : `<p><strong>Estado:</strong> ${escapeHtml(labels[row.estado] || row.estado)}</p>`;
+        : canReassignJunior ? (
+            '<div class="junior-reassignment">' +
+            '<label>Reasignar a un Junior<select class="junior-reassignment-select" ' + (replacementReviewers.length ? "required" : "disabled") + '>' +
+            '<option value="">Seleccione un Junior disponible</option>' + replacementOptions +
+            '</select></label>' +
+            '<label>Motivo (opcional)<input type="text" maxlength="500" class="junior-reassignment-reason" placeholder="Ej. redistribucion de carga"></label>' +
+            '<p class="junior-work-eligibility">' + (replacementReviewers.length ? "Los Juniors inactivos o de vacaciones no aparecen." : "No hay otro Junior activo y disponible para esta solicitud.") + '</p>' +
+            '<button type="button" class="boton-secundario reassign-junior-application" ' + (replacementReviewers.length ? "" : "disabled") + '>Reasignar manualmente</button>' +
+            '</div>'
+        )
+        : "<p><strong>Estado:</strong> " + escapeHtml(labels[row.estado] || row.estado) + "</p>";
     return `<article class="application-card" data-app="${Number(row.id)}"><div><h3>Solicitud #${Number(row.id)} · ${escapeHtml(labelProgram(row.programa_solicitado))}</h3>
         <p><strong>${escapeHtml(student.nombre || "")} ${escapeHtml(student.apellido || "")}</strong> · ${escapeHtml(student.cedula || "")}</p>
         <p>${escapeHtml(student.correo || "")} · Presentada: ${escapeHtml(row.fecha_solicitud || "")}</p>
@@ -119,6 +161,32 @@ function renderAdminCard(row) {
 }
 
 document.addEventListener("click", async (event) => {
+    const manualReassignButton = event.target.closest(".reassign-junior-application");
+    if (manualReassignButton) {
+        const card = manualReassignButton.closest("[data-app]");
+        const feedback = document.querySelector("#admin-application-message");
+        const reviewerId = Number(card.querySelector(".junior-reassignment-select").value);
+        if (!reviewerId) {
+            card.querySelector(".application-feedback").innerHTML = showMessage("Selecciona un Junior disponible.");
+            return;
+        }
+
+        manualReassignButton.disabled = true;
+        try {
+            const result = await api.reasignarJunior(
+                Number(card.dataset.app),
+                reviewerId,
+                card.querySelector(".junior-reassignment-reason").value
+            );
+            await renderStudentPortal(document.querySelector("#view-content"), true);
+            feedback.innerHTML = showMessage(result.mensaje, "exito");
+        } catch (error) {
+            await renderStudentPortal(document.querySelector("#view-content"), true);
+            feedback.innerHTML = showMessage(error.message);
+        }
+        return;
+    }
+
     const openDocument = event.target.closest(".open-application-document");
     if (openDocument) {
         openDocument.disabled = true;

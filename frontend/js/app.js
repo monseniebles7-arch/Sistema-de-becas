@@ -5,6 +5,8 @@ import { renderStudents } from "./estudiantes.js";
 import { renderRegister } from "./registrar-estudiante.js";
 import { renderStudentPortal, renderStudentProfile } from "./portal-estudiante.js";
 import { renderAdministradores } from "./administradores.js";
+import { renderJuniorWork } from "./seguimiento-junior.js";
+import { renderPayments } from "./pagos.js";
 import { loadView, showMessage } from "./ui.js";
 
 const app = document.querySelector("#app");
@@ -18,6 +20,8 @@ async function renderShell(role) {
     app.innerHTML = await loadView(role === "student" ? "views/shell-estudiante.html" : "views/shell.html");
     app.classList.remove("is-vacation-readonly");
     renderActiveAdmin();
+    const paymentLink = document.querySelector("#senior-payments-link");
+    if (paymentLink) paymentLink.hidden = api.getRole() !== "admin_senior";
     if (role !== "student") {
         const banner = document.querySelector("#availability-banner");
         try {
@@ -73,7 +77,9 @@ async function renderPrivateView(view, role) {
     const adminNav = view === "#estudiantes" ? "students"
         : view === "#registrar" || view.startsWith("#editar-estudiante/") ? "register"
         : view === "#solicitudes" ? "applications"
-        : view === "#administradores" ? "administrators" : "home";
+        : view === "#administradores" ? "administrators"
+        : view === "#revision-junior" ? "junior-work"
+        : view === "#pagos" ? "payments" : "home";
     updatePanelNavigation("admin", adminNav, view);
     const editMatch = view.match(/^#editar-estudiante\/(\d+)$/);
     if (view === "#registrar" || editMatch) {
@@ -83,11 +89,16 @@ async function renderPrivateView(view, role) {
         content.innerHTML = await loadView("views/estudiantes.html");
         await renderStudents();
     } else if (view === "#solicitudes") {
-        content.innerHTML = '<h2>Solicitudes de beca</h2><div id="admin-applications">Cargando solicitudes…</div>';
+        content.innerHTML = '<h2>Solicitudes de beca</h2><div id="admin-application-message" aria-live="polite"></div><div id="admin-applications">Cargando solicitudes...</div>';
         await renderStudentPortal(content, true);
     } else if (view === "#administradores" && role === "admin_senior") {
         content.innerHTML = await loadView("views/administradores.html");
         await renderAdministradores(content);
+    } else if (view === "#revision-junior" && role === "admin_senior") {
+        content.innerHTML = await loadView("views/seguimiento-junior.html");
+        await renderJuniorWork(content);
+    } else if (view === "#pagos" && role === "admin_senior") {
+        await renderPayments(content);
     } else {
         content.innerHTML = await loadView("views/inicio.html");
         await renderHome();
@@ -106,7 +117,7 @@ function updatePanelNavigation(role, activeItem, view) {
     if (title) {
         const titles = role === "student"
             ? { home: "Inicio", profile: "Mi perfil", apply: "Solicitar beca" }
-            : { home: "Resumen", students: "Estudiantes", register: "Registrar estudiante", applications: "Solicitudes", administrators: "Administradores" };
+            : { home: "Resumen", students: "Estudiantes", register: "Registrar estudiante", applications: "Solicitudes", administrators: "Administradores", "junior-work": "Revisi\u00f3n Junior", payments: "Pagos simulados" };
         title.textContent = view.startsWith("#editar-estudiante/") ? "Actualizar estudiante" : titles[activeItem];
     }
 }
@@ -124,7 +135,7 @@ async function render(view = window.location.hash || "#publico") {
     }
     const role = api.getRole();
     const allowed = role === "student" ? ["#portal-estudiante", "#perfil-estudiante", "#solicitar"]
-        : ["#inicio", "#estudiantes", "#registrar", "#solicitudes", ...(role === "admin_senior" ? ["#administradores"] : [])];
+        : ["#inicio", "#estudiantes", "#registrar", "#solicitudes", ...(role === "admin_senior" ? ["#administradores", "#revision-junior", "#pagos"] : [])];
     if (!allowed.includes(view) && !/^#editar-estudiante\/\d+$/.test(view)) {
         view = role === "student" ? "#portal-estudiante" : "#inicio";
         window.history.replaceState(null, "", view);
@@ -136,7 +147,7 @@ app.addEventListener("click", (event) => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
     const view = link.getAttribute("href");
-    if (!["#publico", "#login", "#registro", "#inicio", "#estudiantes", "#registrar", "#solicitudes", "#administradores", "#portal-estudiante", "#perfil-estudiante", "#solicitar"].includes(view)
+    if (!["#publico", "#login", "#registro", "#inicio", "#estudiantes", "#registrar", "#solicitudes", "#administradores", "#revision-junior", "#pagos", "#portal-estudiante", "#perfil-estudiante", "#solicitar"].includes(view)
         && !/^#editar-estudiante\/\d+$/.test(view)) return;
     event.preventDefault();
     navigate(view);

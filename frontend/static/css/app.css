@@ -2323,3 +2323,38 @@ body {
 #app.is-vacation-readonly #view-content .verify-application-document,
 #app.is-vacation-readonly #view-content [data-account-toggle],
 #app.is-vacation-readonly #view-content [data-cancel-absence]{display:none}
+
+/* Seguimiento y reasignacion manual de solicitudes entre Juniors */
+.junior-work-page { display: grid; gap: 14px; }
+.junior-work-summary { color: #526a7f; font-weight: 700; }
+.junior-work-list { display: grid; gap: 14px; }
+.junior-work-card { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr); gap: 22px; padding: 22px; border: 1px solid #dce5ed; border-radius: 13px; background: #fff; box-shadow: 0 6px 18px #1835500a; }
+.junior-work-details h3 { margin: 4px 0 10px; color: #183d5d; }
+.junior-work-details p { margin: 7px 0; color: #536b80; }
+.junior-work-kicker { color: #176d86 !important; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.junior-reassignment { display: grid; align-content: start; gap: 10px; padding: 16px; border-radius: 10px; background: #f4f8fb; }
+.junior-reassignment label { display: grid; gap: 6px; color: #334f68; font-size: 13px; font-weight: 700; }
+.junior-reassignment select, .junior-reassignment input { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #bdc9d6; border-radius: 6px; background: #fff; color: #20384d; font: inherit; }
+.junior-reassignment button { width: max-content; }
+.junior-work-eligibility { margin: 0; color: #60778d; font-size: 12px; line-height: 1.45; }
+.junior-work-empty { padding: 28px; border: 1px dashed #c8d3de; border-radius: 11px; background: #fff; text-align: center; }
+.junior-work-empty h3 { margin: 0 0 7px; color: #183d5d; }
+.junior-work-empty p { margin: 0; color: #607184; }
+@media (max-width: 760px) { .junior-work-card { grid-template-columns: 1fr; padding: 16px; } .junior-reassignment button { width: 100%; } }
+
+.admin-account-action-note { color: #8a4b08; font-size: 12px; font-weight: 700; line-height: 1.4; }
+
+/* Pagos academicos simulados y cuenta bancaria estudiantil */
+.payments-page,.student-account-section{display:grid;gap:16px;margin-top:22px}
+.payments-notice{padding:14px 18px;border:1px solid #b9d9e7;border-radius:10px;background:#edf8fc;color:#15516b;font-weight:700}
+.payment-list{display:grid;gap:12px}
+.payment-card{display:grid;grid-template-columns:minmax(220px,1fr) minmax(320px,1.25fr);gap:18px;align-items:center;padding:18px;border:1px solid #dce5ed;border-radius:12px;background:#fff}
+.payment-card h4{margin:0 0 8px;color:#183d5d}.payment-card p{margin:6px 0;color:#536b80}
+.payment-create,.student-bank-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end}
+.payment-create label,.student-bank-form label{display:grid;gap:6px;color:#334f68;font-size:13px;font-weight:700}
+.payment-create input,.student-bank-form input,.student-bank-form select{min-height:40px;padding:8px 10px;border:1px solid #bdc9d6;border-radius:6px;background:#fff;font:inherit}
+.payment-create button,.student-bank-form button{width:max-content}
+.payment-actions{display:flex;flex-wrap:wrap;gap:8px}.payment-actions button{width:max-content}
+@media(max-width:760px){.payment-card{grid-template-columns:1fr}.payment-create,.student-bank-form{grid-template-columns:1fr}.payment-create button,.student-bank-form button,.payment-actions button{width:100%}}
+
+.payment-timeline{margin-top:10px;color:#405d74;font-size:13px}.payment-timeline summary{cursor:pointer;font-weight:700}.payment-timeline ol{padding-left:20px}.payment-timeline li{margin:5px 0;line-height:1.45}

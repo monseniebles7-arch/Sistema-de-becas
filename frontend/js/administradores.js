@@ -25,7 +25,7 @@ export async function renderAdministradores(container) {
         container.querySelector("#vacation-start").min = localDate();
         container.querySelector("#vacation-end").min = localDate();
         if (!centers.length) {
-            message.innerHTML = showMessage("El catálogo de centros está vacío. Ejecuta la migración 20261019_admin_roles_centros.sql completa en la base de datos.");
+            message.innerHTML = showMessage("No hay centros de atencion registrados.");
         }
     } catch (error) {
         officeSelect.replaceChildren(new Option("No se pudieron cargar los centros", ""));
@@ -137,15 +137,46 @@ function renderAdmins(target, admins) {
         target.textContent = "No hay administradores registrados.";
         return;
     }
-    target.innerHTML = `<div class="admin-account-list">${admins.map((admin) => `
-        <article class="admin-account-item">
-            <div class="admin-account-person"><strong>${escapeHtml(admin.nombre_completo || admin.usuario)}</strong><span>${escapeHtml(admin.correo || "Sin correo registrado")}</span></div>
-            <div class="admin-account-details"><span class="admin-role-badge ${admin.rol === "senior" ? "is-senior" : "is-junior"}">${admin.rol === "senior" ? "Administrador Senior" : "Administrador Junior"}</span><span class="admin-account-center">${escapeHtml(admin.centro_atencion || "Sin centro asignado")}</span><span class="admin-account-scope">${admin.alcance === "provincia" ? "Acceso a toda la provincia" : "Acceso a este centro"}</span><span class="admin-account-scope">${Number(admin.carga_abierta || 0)} solicitudes abiertas</span><span class="admin-availability-badge ${admin.activo ? admin.en_vacaciones ? "is-away" : "is-active" : "is-inactive"}">${!admin.activo ? "Cuenta inactiva" : admin.en_vacaciones ? "De vacaciones" : "Disponible"}</span><button type="button" class="boton-secundario" data-account-toggle="${Number(admin.id)}" data-active="${Boolean(admin.activo)}">${admin.activo ? "Inactivar cuenta" : "Activar cuenta"}</button></div>
-        </article>`).join("")}</div>`;
+
+    const currentAdminId = Number(api.getUser()?.id);
+    const activeSeniorCount = admins.filter((admin) =>
+        admin.rol === "senior" && admin.activo && admin.misma_oficina
+    ).length;
+
+    target.innerHTML = '<div class="admin-account-list">' + admins.map((admin) => {
+        const isActiveSenior = admin.rol === "senior" && admin.activo;
+        let actionMessage = "";
+        if (!admin.misma_oficina) {
+            actionMessage = "No puedes administrar cuentas de otra oficina.";
+        } else if (isActiveSenior && Number(admin.id) === currentAdminId) {
+            actionMessage = "No tienes permiso para desactivar tu propia cuenta Senior.";
+        } else if (isActiveSenior && activeSeniorCount <= 1) {
+            actionMessage = "No se puede desactivar al unico Senior activo de esta oficina.";
+        }
+
+        const disabled = actionMessage ? "disabled" : "";
+        const title = actionMessage ? ' title="' + escapeHtml(actionMessage) + '"' : "";
+        return '<article class="admin-account-item">' +
+            '<div class="admin-account-person"><strong>' + escapeHtml(admin.nombre_completo || admin.usuario) +
+                '</strong><span>' + escapeHtml(admin.correo || "Sin correo registrado") + '</span></div>' +
+            '<div class="admin-account-details">' +
+                '<span class="admin-role-badge ' + (admin.rol === "senior" ? "is-senior" : "is-junior") + '">' +
+                    (admin.rol === "senior" ? "Administrador Senior" : "Administrador Junior") + '</span>' +
+                '<span class="admin-account-center">' + escapeHtml(admin.centro_atencion || "Sin centro asignado") + '</span>' +
+                '<span class="admin-account-scope">' + (admin.alcance === "provincia" ? "Acceso a toda la provincia" : "Acceso a este centro") + '</span>' +
+                '<span class="admin-account-scope">' + Number(admin.carga_abierta || 0) + ' solicitudes abiertas</span>' +
+                '<span class="admin-availability-badge ' + (admin.activo ? admin.en_vacaciones ? "is-away" : "is-active" : "is-inactive") + '">' +
+                    (!admin.activo ? "Cuenta inactiva" : admin.en_vacaciones ? "De vacaciones" : "Disponible") + '</span>' +
+                '<button type="button" class="boton-secundario" data-account-toggle="' + Number(admin.id) +
+                    '" data-active="' + Boolean(admin.activo) + '" ' + disabled + title + '>' +
+                    (admin.activo ? "Inactivar cuenta" : "Activar cuenta") + '</button>' +
+                (actionMessage ? '<span class="admin-account-action-note">' + escapeHtml(actionMessage) + '</span>' : "") +
+            '</div></article>';
+    }).join("") + '</div>';
 }
 
 function fillReviewerSelect(select, admins) {
-    const eligibleAccounts = admins.filter((admin) => admin.activo);
+    const eligibleAccounts = admins.filter((admin) => admin.activo && admin.misma_oficina);
     select.replaceChildren(new Option(eligibleAccounts.length ? "Seleccione un revisor" : "No hay revisores activos", ""));
     for (const admin of eligibleAccounts) {
         const role = admin.rol === "senior" ? "Senior" : "Junior";

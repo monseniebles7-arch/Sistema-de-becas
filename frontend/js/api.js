@@ -132,6 +132,13 @@ export const api = {
             throw error;
         }
     },
+    pagosGestion() { return request("/pagos/gestion"); },
+    crearPago(datos) { return request("/pagos", { method: "POST", body: JSON.stringify(datos) }); },
+    simularPago(id, resultado) { return request(`/pagos/${id}/simular`, { method: "POST", body: JSON.stringify({ resultado }) }); },
+    cancelarPago(id) { return request(`/pagos/${id}/cancelar`, { method: "POST", body: JSON.stringify({}) }); },
+    cuentaBancariaEstudiante() { return request("/estudiante/cuenta-bancaria"); },
+    guardarCuentaBancariaEstudiante(datos) { return request("/estudiante/cuenta-bancaria", { method: "PUT", body: JSON.stringify(datos) }); },
+    pagosEstudiante() { return request("/estudiante/pagos"); },
     perfilEstudiante() { return request("/estudiante/perfil"); },
     misSolicitudes() { return request("/estudiante/solicitudes"); },
     crearSolicitud(estudiante) {
@@ -157,6 +164,13 @@ export const api = {
         return request(`/estudiante/solicitudes/${solicitudId}/documentos/${documentoId}`, { method: "DELETE" });
     },
     listarSolicitudesAdmin() { return request("/solicitudes"); },
+    listarTrabajoJunior() { return request("/solicitudes/en-revision"); },
+    reasignarJunior(id, juniorId, motivo) {
+        return request("/solicitudes/" + id + "/junior", {
+            method: "PATCH",
+            body: JSON.stringify({ junior_id: juniorId, motivo })
+        });
+    },
     actualizarSolicitud(id, estado, observaciones_admin) {
         return request(`/solicitudes/${id}`, { method: "PATCH", body: JSON.stringify({ estado, observaciones_admin }) });
     },

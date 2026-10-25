@@ -15,6 +15,8 @@ export function renderActiveAdmin() {
         if (roleLabel) roleLabel.textContent = api.getRole() === "admin_senior" ? "Administrador Senior" : "Administrador Junior";
         const managerLink = document.querySelector("#admin-managers-link");
         if (managerLink) managerLink.hidden = api.getRole() !== "admin_senior";
+        const juniorWorkLink = document.querySelector("#senior-junior-work-link");
+        if (juniorWorkLink) juniorWorkLink.hidden = api.getRole() !== "admin_senior";
         const initials = document.querySelector("#panel-user-initials");
         if (initials) {
             const parts = nombre.trim().split(/\s+/).filter(Boolean);
