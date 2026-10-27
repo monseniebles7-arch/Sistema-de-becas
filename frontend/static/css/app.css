@@ -2358,3 +2358,72 @@ body {
 @media(max-width:760px){.payment-card{grid-template-columns:1fr}.payment-create,.student-bank-form{grid-template-columns:1fr}.payment-create button,.student-bank-form button,.payment-actions button{width:100%}}
 
 .payment-timeline{margin-top:10px;color:#405d74;font-size:13px}.payment-timeline summary{cursor:pointer;font-weight:700}.payment-timeline ol{padding-left:20px}.payment-timeline li{margin:5px 0;line-height:1.45}
+
+/* Registro y revisión de cuentas bancarias estudiantiles */
+.bank-account-page { display: grid; gap: 18px; max-width: 980px; margin: 8px auto 30px; }
+.bank-account-summary, .bank-account-form { padding: 24px; border: 1px solid #d8e3ee; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px #163e5d0b; }
+.bank-account-summary-heading { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+.bank-account-summary-heading h2 { margin: 4px 0 0; color: #183d5d; }
+.bank-account-summary dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.bank-account-summary dl div { padding: 12px 14px; border-radius: 9px; background: #f4f8fc; }
+.bank-account-summary dt { color: #60778d; font-size: 12px; font-weight: 700; }
+.bank-account-summary dd { margin: 5px 0 0; color: #20384d; font-weight: 700; overflow-wrap: anywhere; }
+.bank-account-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.bank-account-form h3, .bank-account-form > p, .bank-certification-upload, .bank-sole-owner, .bank-account-actions { grid-column: 1 / -1; }
+.bank-account-form h3 { margin: 0; color: #183d5d; }
+.bank-account-form > p, .bank-account-explanation { margin: 0; color: #60778d; line-height: 1.55; }
+.bank-account-form label { display: grid; align-content: start; gap: 7px; color: #334f68; font-size: 13px; font-weight: 700; }
+.bank-account-form input:not([type="checkbox"]), .bank-account-form select { width: 100%; min-height: 44px; padding: 9px 12px; border: 1px solid #bdc9d6; border-radius: 7px; background: #fff; color: #20384d; font: inherit; }
+.bank-account-form input[type="file"] { padding: 10px; background: #f8fbfe; }
+.bank-account-form small { color: #60778d; font-weight: 400; }
+.bank-sole-owner { display: flex !important; align-items: flex-start; gap: 10px !important; padding: 14px; border: 1px solid #cfe2f0; border-radius: 9px; background: #f1f8fd; }
+.bank-sole-owner input { width: 17px; height: 17px; margin: 2px 0 0; accent-color: #1769aa; }
+.bank-account-actions, .bank-certification-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.bank-account-actions button, .bank-certification-actions button { width: max-content; }
+.bank-certification-status { display: inline-flex; padding: 7px 12px; border-radius: 20px; background: #edf3f8; color: #39566f; font-size: 13px; font-weight: 700; }
+.bank-certification-status[data-status="verificada"] { background: #e6f5ec; color: #216740; }
+.bank-certification-status[data-status="rechazada"] { background: #fbeaec; color: #8c2025; }
+.bank-certification-status[data-status="pendiente_revision"] { background: #fff4d9; color: #765600; }
+.bank-account-review-note, .bank-review-message { padding: 11px 13px; border-left: 3px solid #d49b28; border-radius: 5px; background: #fff8e8; color: #624c18; }
+@media (max-width: 650px) { .bank-account-form, .bank-account-summary dl { grid-template-columns: 1fr; } .bank-account-summary, .bank-account-form { padding: 18px; } .bank-account-actions button, .bank-certification-actions button { width: 100%; } }
+
+/* Espaciado adicional para formularios e historial de pagos del estudiante */
+.student-account-section { gap: 22px; margin-top: 28px; }
+.student-account-section > h2, .student-account-section > h3 { margin: 0; }
+.student-account-section > p { margin: 0; line-height: 1.55; }
+.student-bank-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 22px; align-items: end; padding: 22px; border: 1px solid #d8e3ee; border-radius: 12px; background: #fff; }
+.student-bank-form label { gap: 8px; }
+.student-bank-form input, .student-bank-form select { width: 100%; min-height: 46px; padding: 10px 12px; }
+.student-bank-form button { justify-self: start; min-height: 44px; }
+.student-account-section > .boton-secundario { justify-self: start; }
+.student-payment-history { display: grid; gap: 14px; }
+.student-payment-history .payment-card { margin: 0; }
+.student-account-overview { display: grid; gap: 16px; padding: 22px; border: 1px solid #d8e3ee; border-radius: 12px; background: #fff; }
+.student-account-overview h2, .student-account-overview p { margin-top: 0; }
+.student-account-overview-details { display: grid; grid-template-columns: minmax(120px, .3fr) 1fr; gap: 8px 14px; padding: 14px; border-radius: 9px; background: #f4f8fc; }
+.student-account-overview-details span { color: #60778d; font-size: 13px; }
+.student-account-overview-details strong { overflow-wrap: anywhere; color: #20384d; }
+.payments-page #payment-scholarships, .payments-page #payment-history { display: grid; gap: 18px; }
+.payments-page .payment-card { grid-template-columns: minmax(240px, .85fr) minmax(360px, 1.15fr); gap: 24px; align-items: start; padding: 24px; }
+.payments-page .payment-card > div:first-child { display: grid; align-content: start; gap: 8px; }
+.payments-page .payment-card p { margin: 0; line-height: 1.55; }
+.payments-page .payment-create { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 100%; }
+.payments-page .payment-create label { gap: 8px; min-width: 0; }
+.payments-page .payment-create input { width: 100%; min-width: 0; min-height: 44px; }
+.payments-page .payment-create button { grid-column: 1 / -1; justify-self: start; min-height: 44px; }
+.payments-page > h3 { margin: 8px 0 0; }
+@media (max-width: 800px) {
+    .payments-page .payment-card { grid-template-columns: 1fr; }
+    .payments-page .payment-create { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+    .student-bank-form { grid-template-columns: 1fr; padding: 16px; }
+    .student-bank-form button { width: 100%; }
+    .student-account-overview { padding: 16px; }
+    .student-account-overview-details { grid-template-columns: 1fr; }
+    .payments-page .payment-create { grid-template-columns: 1fr; }
+    .payments-page .payment-create button { width: 100%; }
+    .payments-page .payment-card { padding: 18px; }
+}
+.student-bank-sole-owner { grid-column: 1 / -1; display: flex !important; align-items: flex-start; gap: 10px !important; padding: 13px 15px; border: 1px solid #cfe2f0; border-radius: 9px; background: #f1f8fd; }
+.student-bank-sole-owner input { width: 17px; height: 17px; margin: 2px 0 0; accent-color: #1769aa; }

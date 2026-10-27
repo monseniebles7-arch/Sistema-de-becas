@@ -70,6 +70,20 @@ async function request(path, options = {}) {
     return data;
 }
 
+async function requestBlob(path) {
+    const headers = new Headers();
+    const token = getToken();
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    const response = await fetch(`${window.APP_CONFIG.apiBaseUrl}${path}`, { headers });
+    if (!response.ok) {
+        let data = null;
+        try { data = await response.json(); } catch { data = null; }
+        const error = new Error(data?.error || "No se pudo descargar el archivo.");
+        error.status = response.status;
+        throw error;
+    }
+    return response.blob();
+}
 export const api = {
     getToken,
     getAdmin,
@@ -137,6 +151,15 @@ export const api = {
     simularPago(id, resultado) { return request(`/pagos/${id}/simular`, { method: "POST", body: JSON.stringify({ resultado }) }); },
     cancelarPago(id) { return request(`/pagos/${id}/cancelar`, { method: "POST", body: JSON.stringify({}) }); },
     cuentaBancariaEstudiante() { return request("/estudiante/cuenta-bancaria"); },
+    guardarCuentaConCertificacion(datos) { return request("/estudiante/cuenta-bancaria", { method: "POST", body: datos }); },
+    descargarCertificacionEstudiante() { return requestBlob("/estudiante/cuenta-bancaria/certificacion"); },
+    descargarCertificacionSenior(studentId) { return requestBlob(`/estudiantes/${studentId}/cuenta-bancaria/certificacion`); },
+    eliminarCertificacionBancaria() { return request("/estudiante/cuenta-bancaria/certificacion", { method: "DELETE" }); },
+    revisarCertificacionBancaria(studentId, estado, observacion = "") {
+        return request(`/estudiantes/${studentId}/cuenta-bancaria/revision`, {
+            method: "PATCH", body: JSON.stringify({ estado, observacion })
+        });
+    },
     guardarCuentaBancariaEstudiante(datos) { return request("/estudiante/cuenta-bancaria", { method: "PUT", body: JSON.stringify(datos) }); },
     pagosEstudiante() { return request("/estudiante/pagos"); },
     perfilEstudiante() { return request("/estudiante/perfil"); },

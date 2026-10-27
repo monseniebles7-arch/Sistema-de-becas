@@ -7,6 +7,7 @@ import { renderStudentPortal, renderStudentProfile } from "./portal-estudiante.j
 import { renderAdministradores } from "./administradores.js";
 import { renderJuniorWork } from "./seguimiento-junior.js";
 import { renderPayments } from "./pagos.js";
+import { renderStudentBankAccount } from "./cuenta-bancaria.js";
 import { loadView, showMessage } from "./ui.js";
 
 const app = document.querySelector("#app");
@@ -48,7 +49,7 @@ async function renderPrivateView(view, role) {
     await renderShell(role);
     const content = document.querySelector("#view-content");
     if (role === "student") {
-        const activeNav = view === "#perfil-estudiante" ? "profile" : view === "#solicitar" ? "apply" : "home";
+        const activeNav = view === "#perfil-estudiante" ? "profile" : view === "#solicitar" ? "apply" : view === "#cuenta-bancaria" ? "bank-account" : "home";
         updatePanelNavigation("student", activeNav, view);
         if (view === "#solicitar") {
             let applications;
@@ -66,6 +67,8 @@ async function renderPrivateView(view, role) {
             }
             content.innerHTML = await loadView("views/registrar-estudiante.html");
             await renderRegister(null, true);
+        } else if (view === "#cuenta-bancaria") {
+            await renderStudentBankAccount(content);
         } else if (view === "#perfil-estudiante") {
             content.innerHTML = '<div class="student-welcome"><h2>Mi perfil</h2><p>Cargando tus datos...</p></div>';
             await renderStudentProfile(content);
@@ -116,7 +119,7 @@ function updatePanelNavigation(role, activeItem, view) {
     const title = document.querySelector("#panel-page-title");
     if (title) {
         const titles = role === "student"
-            ? { home: "Inicio", profile: "Mi perfil", apply: "Solicitar beca" }
+            ? { home: "Inicio", profile: "Mi perfil", apply: "Solicitar beca", "bank-account": "Cuenta bancaria" }
             : { home: "Resumen", students: "Estudiantes", register: "Registrar estudiante", applications: "Solicitudes", administrators: "Administradores", "junior-work": "Revisi\u00f3n Junior", payments: "Pagos simulados" };
         title.textContent = view.startsWith("#editar-estudiante/") ? "Actualizar estudiante" : titles[activeItem];
     }
@@ -134,7 +137,7 @@ async function render(view = window.location.hash || "#publico") {
         return;
     }
     const role = api.getRole();
-    const allowed = role === "student" ? ["#portal-estudiante", "#perfil-estudiante", "#solicitar"]
+    const allowed = role === "student" ? ["#portal-estudiante", "#perfil-estudiante", "#solicitar", "#cuenta-bancaria"]
         : ["#inicio", "#estudiantes", "#registrar", "#solicitudes", ...(role === "admin_senior" ? ["#administradores", "#revision-junior", "#pagos"] : [])];
     if (!allowed.includes(view) && !/^#editar-estudiante\/\d+$/.test(view)) {
         view = role === "student" ? "#portal-estudiante" : "#inicio";
@@ -147,7 +150,7 @@ app.addEventListener("click", (event) => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
     const view = link.getAttribute("href");
-    if (!["#publico", "#login", "#registro", "#inicio", "#estudiantes", "#registrar", "#solicitudes", "#administradores", "#revision-junior", "#pagos", "#portal-estudiante", "#perfil-estudiante", "#solicitar"].includes(view)
+    if (!["#publico", "#login", "#registro", "#inicio", "#estudiantes", "#registrar", "#solicitudes", "#administradores", "#revision-junior", "#pagos", "#portal-estudiante", "#perfil-estudiante", "#solicitar", "#cuenta-bancaria"].includes(view)
         && !/^#editar-estudiante\/\d+$/.test(view)) return;
     event.preventDefault();
     navigate(view);

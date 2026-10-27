@@ -1,5 +1,6 @@
 import { api } from "./api.js";
 import { escapeHtml, showMessage } from "./ui.js";
+import { bancosPanama } from "./bancos-panama.js";
 
 const labels = { borrador: "Borrador incompleto", en_revision: "En revisión", pendiente_aprobacion: "Pendiente de aprobación Senior", aprobada: "Aprobada", rechazada: "Rechazada", requiere_cambios: "Requiere cambios" };
 const provinceLabels = {
@@ -106,12 +107,31 @@ export async function renderStudentProfile(container) {
         ];
         container.innerHTML = `<section class="student-welcome"><div><p class="student-kicker">Datos personales</p><h2>Mi perfil</h2><p>Información asociada a tu cuenta estudiantil.</p></div></section><div class="student-profile-grid">${fields.map(([label, value]) => `<article><span>${escapeHtml(label)}</span><strong>${escapeHtml(value || "No registrado")}</strong></article>`).join("")}</div>`;
         const [account, payments] = await Promise.all([api.cuentaBancariaEstudiante(), api.pagosEstudiante()]);
-        container.insertAdjacentHTML("beforeend", `<section class="student-account-section"><h2>Cuenta bancaria</h2><p>Esta informacion se usa en la simulacion academica de pagos.</p><p>Cuenta activa: ${account ? `${escapeHtml(account.banco)} / ${escapeHtml(account.tipo_cuenta)} / ${escapeHtml(account.numero_mascara)}` : "Sin registrar"}</p><form id="student-bank-account-form" class="student-bank-form"><label>Banco<input name="banco" maxlength="100" required></label><label>Tipo de cuenta<select name="tipo_cuenta" required><option value="">Selecciona</option><option value="ahorro">Ahorro</option><option value="corriente">Corriente</option><option value="otro">Otro</option></select></label><label>Numero de cuenta<input name="numero_cuenta" maxlength="50" autocomplete="off" required></label><label>Titular<input name="titular" maxlength="150" required></label><button class="boton-primario">Guardar cuenta</button><span id="bank-account-feedback" aria-live="polite"></span></form><h3>Historial de pagos</h3>${payments.length ? payments.map((payment) => `<article class="payment-card"><div><strong>${escapeHtml(payment.tipo_beca || "Beca")}</strong><p>${escapeHtml(payment.periodo || "Sin periodo")} / $${escapeHtml(payment.monto)} / ${escapeHtml(payment.fecha_pago)}</p><p>Estado: ${escapeHtml(payment.estado)}</p>${payment.referencia_simulacion ? `<p>Referencia: ${escapeHtml(payment.referencia_simulacion)}</p>` : ""}${payment.historial?.length ? `<details class="payment-timeline"><summary>Ver trazabilidad (${payment.historial.length})</summary><ol>${payment.historial.map((event) => `<li>${escapeHtml(event.fecha_evento || "")} - ${escapeHtml(event.estado_anterior || "Inicio")} - ${escapeHtml(event.estado_nuevo)}${event.nota ? ` - ${escapeHtml(event.nota)}` : ""}</li>`).join("")}</ol></details>` : ""}</div></article>`).join("") : "<p>Aun no hay pagos registrados.</p>"}</section>`);
+        const existingBank = account?.banco && !bancosPanama.includes(account.banco)
+            ? `<option value="${escapeHtml(account.banco)}" selected>${escapeHtml(account.banco)} (registrado)</option>` : "";
+        const bankOptions = bancosPanama.map((bank) => `<option value="${escapeHtml(bank)}" ${account?.banco === bank ? "selected" : ""}>${escapeHtml(bank)}</option>`).join("");
+        container.insertAdjacentHTML("beforeend", `<section class="student-account-section">
+            <h2>Cuenta bancaria</h2>
+            <p>Esta informacion se usa en la simulacion academica de pagos.</p>
+            <p>Cuenta activa: ${account ? `${escapeHtml(account.banco)} / ${escapeHtml(account.tipo_cuenta)} / ${escapeHtml(account.numero_mascara)}` : "Sin registrar"}</p>
+            <form id="student-bank-account-form" class="student-bank-form">
+                <label>Banco<select name="banco" required><option value="">Selecciona tu banco</option>${existingBank}${bankOptions}</select></label>
+                <label>Tipo de cuenta<select name="tipo_cuenta" required><option value="">Selecciona</option><option value="ahorro">Ahorro</option><option value="corriente">Corriente</option><option value="otro">Otro</option></select></label>
+                <label>Numero de cuenta<input name="numero_cuenta" maxlength="50" autocomplete="off" required></label>
+                <label>Titular<input name="titular" maxlength="150" required></label>
+                <label class="student-bank-sole-owner"><input type="checkbox" name="titular_unico_confirmado" required><span>Confirmo que soy el unico titular de la cuenta.</span></label>
+                <button class="boton-primario">Guardar cuenta</button>
+                <span id="bank-account-feedback" aria-live="polite"></span>
+            </form>
+            <a class="boton-secundario" href="#cuenta-bancaria">Gestionar certificación bancaria PDF</a>
+            <h3>Historial de pagos</h3>
+            <div class="student-payment-history">${payments.length ? payments.map((payment) => `<article class="payment-card"><div><strong>${escapeHtml(payment.tipo_beca || "Beca")}</strong><p>${escapeHtml(payment.periodo || "Sin periodo")} / $${escapeHtml(payment.monto)} / ${escapeHtml(payment.fecha_pago)}</p><p>Estado: ${escapeHtml(payment.estado)}</p>${payment.referencia_simulacion ? `<p>Referencia: ${escapeHtml(payment.referencia_simulacion)}</p>` : ""}${payment.historial?.length ? `<details class="payment-timeline"><summary>Ver trazabilidad (${payment.historial.length})</summary><ol>${payment.historial.map((event) => `<li>${escapeHtml(event.fecha_evento || "")} - ${escapeHtml(event.estado_anterior || "Inicio")} - ${escapeHtml(event.estado_nuevo)}${event.nota ? ` - ${escapeHtml(event.nota)}` : ""}</li>`).join("")}</ol></details>` : ""}</div></article>`).join("") : "<p>Aun no hay pagos registrados.</p>"}</div>
+        </section>`);
         const bankForm = container.querySelector("#student-bank-account-form");
         bankForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             const button = bankForm.querySelector("button"); button.disabled = true;
-            try { await api.guardarCuentaBancariaEstudiante(Object.fromEntries(new FormData(bankForm))); await renderStudentProfile(container); }
+            try { const values = Object.fromEntries(new FormData(bankForm)); values.titular_unico_confirmado = bankForm.elements.titular_unico_confirmado.checked; await api.guardarCuentaBancariaEstudiante(values); await renderStudentProfile(container); }
             catch (error) { container.querySelector("#bank-account-feedback").innerHTML = showMessage(error.message); button.disabled = false; }
         });
     } catch (error) { container.innerHTML = showMessage(error.message); }
